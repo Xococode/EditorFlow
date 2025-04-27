@@ -1,0 +1,149 @@
+{
+  "drawflow": {
+    "Home": {
+      "data": {
+        "1": {
+          "id": 1,
+          "name": "loadImageAndView",
+          "data": {
+            "imageDataUrl": "data:image/png;base64,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",
+            "filename": "descarga.png"
+          },
+          "class": "media-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-camera-retro node-icon\"></i> Cargar Imagen (Vista)</div><div class=\"box\"><button class=\"node-file-input-button\" title=\"Seleccionar archivo de imagen local\">Seleccionar Imagen</button><input type=\"file\" class=\"hidden-file-input\" accept=\"image/*\"><span class=\"node-file-input-label\" df-filename>Ningún archivo seleccionado</span><img class=\"node-image-preview\" df-preview-src alt=\"Vista previa\"><div class=\"node-description\">Carga img local y muestra vista previa. Sale Data URL.</div></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "12",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -186.25,
+          "pos_y": 10
+        },
+        "2": {
+          "id": 2,
+          "name": "loadTextFile",
+          "data": {
+            "fileContent": "4",
+            "filename": "output.txt"
+          },
+          "class": "file-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-file-upload node-icon\"></i> Cargar Archivo Texto</div><div class=\"box\"><button class=\"node-file-input-button\" title=\"Seleccionar archivo de texto local (.txt, .json, .csv, .md...)\">Seleccionar Archivo</button><input type=\"file\" class=\"hidden-file-input\" accept=\".txt,.json,.csv,.md,.xml,.html,.css,.js,.log,.yaml,.ini\"><span class=\"node-file-input-label\" df-filename>Ningún archivo seleccionado</span><textarea df-preview-content readonly style=\"min-height: 40px; height: 60px; font-size: 0.8em; margin-top: 5px; background-color: #f8f8f8; border: 1px solid #ddd; color: #555;\" placeholder=\"Vista previa del contenido...\"></textarea><div class=\"node-description\">Carga archivo de texto local. Sale contenido.</div></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "11",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -199,
+          "pos_y": 521
+        },
+        "11": {
+          "id": 11,
+          "name": "display",
+          "data": {
+            "result": "4"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 227,
+          "pos_y": 543.25
+        },
+        "12": {
+          "id": 12,
+          "name": "display",
+          "data": {
+            "result": "data:image/png;base64,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"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 227.5,
+          "pos_y": -174
+        },
+        "13": {
+          "id": 13,
+          "name": "text",
+          "data": {
+            "value": "TEXTO",
+            "customTitle": ""
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> <span class=\"node-title-text\">Texto</span></div><div class=\"box\"><label for=\"df-customTitle\">Título del Nodo:</label><input type=\"text\" df-customTitle placeholder=\"Título personalizado...\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\" style=\"min-height: 80px;\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "14",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -465,
+          "pos_y": -337.75
+        },
+        "14": {
+          "id": 14,
+          "name": "display",
+          "data": {
+            "result": "TEXTO"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "13",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": -129.25,
+          "pos_y": -316
+        }
+      }
+    }
+  }
+}

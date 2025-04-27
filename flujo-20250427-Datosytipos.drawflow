@@ -1,0 +1,603 @@
+{
+  "drawflow": {
+    "Home": {
+      "data": {
+        "1": {
+          "id": 1,
+          "name": "number",
+          "data": {
+            "value": 123.45
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "output": "input_1"
+                },
+                {
+                  "node": "105",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -68.75,
+          "pos_y": -163
+        },
+        "2": {
+          "id": 2,
+          "name": "text",
+          "data": {
+            "value": "678",
+            "customTitle": "Texto Numérico"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> <span class=\"node-title-text\">Texto</span></div><div class=\"box\"><label for=\"df-customTitle\">Título del Nodo:</label><input type=\"text\" df-customTitle placeholder=\"Título personalizado...\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\" style=\"min-height: 80px;\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "output": "input_2"
+                },
+                {
+                  "node": "101",
+                  "output": "input_1"
+                },
+                {
+                  "node": "104",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -143.5,
+          "pos_y": 101
+        },
+        "3": {
+          "id": 3,
+          "name": "boolean",
+          "data": {
+            "value": "false"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-toggle-on node-icon\"></i> Booleano</div><div class=\"box\"><label for=\"df-value\">Valor:</label><select df-value><option value=\"true\">Verdadero (true)</option><option value=\"false\">Falso (false)</option></select></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "output": "input_3"
+                }
+              ]
+            }
+          },
+          "pos_x": -142.5,
+          "pos_y": 509.25
+        },
+        "100": {
+          "id": 100,
+          "name": "createArray",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-list-ol node-icon\"></i> Crear Array</div><div class=\"box node-description\">Recoge valores de las entradas conectadas en un array.</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_3": {
+              "connections": [
+                {
+                  "node": "3",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_4": {
+              "connections": []
+            },
+            "input_5": {
+              "connections": []
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "102",
+                  "output": "input_1"
+                },
+                {
+                  "node": "103",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 347,
+          "pos_y": 67
+        },
+        "101": {
+          "id": 101,
+          "name": "getType",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-info-circle node-icon\"></i> Obtener Tipo</div><div class=\"node-description\">Devuelve el tipo de dato (string, number, boolean, object, undefined).</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "201",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 327,
+          "pos_y": 336
+        },
+        "102": {
+          "id": 102,
+          "name": "getType",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-info-circle node-icon\"></i> Obtener Tipo</div><div class=\"node-description\">Devuelve el tipo de dato (string, number, boolean, object, undefined).</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "202",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 640,
+          "pos_y": -127
+        },
+        "103": {
+          "id": 103,
+          "name": "stringifyJson",
+          "data": {
+            "pretty": "true"
+          },
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-file-alt node-icon\"></i> Texto JSON (Stringify)</div><div class=\"box\"><label for=\"df-pretty\">Formato legible:</label><select df-pretty><option value=\"false\">No (compacto)</option><option value=\"true\">Sí (indentado)</option></select></div><div class=\"node-description\">Convierte objeto/array a texto JSON.</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "106",
+                  "output": "input_1"
+                },
+                {
+                  "node": "203",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 640.5,
+          "pos_y": 101.5
+        },
+        "104": {
+          "id": 104,
+          "name": "toNumber",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-exchange-alt node-icon\"></i> Convertir a Número</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "204",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 325.25,
+          "pos_y": 527
+        },
+        "105": {
+          "id": 105,
+          "name": "toString",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-exchange-alt node-icon\"></i> Convertir a Texto</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "205",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 355.5,
+          "pos_y": -278.25
+        },
+        "106": {
+          "id": 106,
+          "name": "parseJson",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-file-code node-icon\"></i> Parsear JSON</div><div class=\"node-description\">Convierte texto JSON a objeto/array.</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "103",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "107",
+                  "output": "input_1"
+                },
+                {
+                  "node": "206",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 954.25,
+          "pos_y": 71
+        },
+        "107": {
+          "id": 107,
+          "name": "getType",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-info-circle node-icon\"></i> Obtener Tipo</div><div class=\"node-description\">Devuelve el tipo de dato (string, number, boolean, object, undefined).</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "106",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "207",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1301,
+          "pos_y": 300
+        },
+        "201": {
+          "id": 201,
+          "name": "display",
+          "data": {
+            "result": "string"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 638.25,
+          "pos_y": 353
+        },
+        "202": {
+          "id": 202,
+          "name": "display",
+          "data": {
+            "result": "object"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "102",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 997.75,
+          "pos_y": -173
+        },
+        "203": {
+          "id": 203,
+          "name": "display",
+          "data": {
+            "result": "[\n  123.45,\n  \"678\",\n  false\n]"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "103",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 950,
+          "pos_y": 430
+        },
+        "204": {
+          "id": 204,
+          "name": "display",
+          "data": {
+            "result": "678"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "104",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 628.25,
+          "pos_y": 610.5
+        },
+        "205": {
+          "id": 205,
+          "name": "display",
+          "data": {
+            "result": "123.45"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "105",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 659,
+          "pos_y": -393.25
+        },
+        "206": {
+          "id": 206,
+          "name": "display",
+          "data": {
+            "result": "[\n  123.45,\n  \"678\",\n  false\n]"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "106",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1346,
+          "pos_y": 8
+        },
+        "207": {
+          "id": 207,
+          "name": "display",
+          "data": {
+            "result": "object"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "107",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1814.25,
+          "pos_y": 391
+        },
+        "208": {
+          "id": 208,
+          "name": "number",
+          "data": {
+            "value": "1"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "209",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -190,
+          "pos_y": -462.75
+        },
+        "209": {
+          "id": 209,
+          "name": "toString",
+          "data": {},
+          "class": "data-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-exchange-alt node-icon\"></i> Convertir a Texto</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "208",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "210",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 177.25,
+          "pos_y": -550
+        },
+        "210": {
+          "id": 210,
+          "name": "display",
+          "data": {
+            "result": "1"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "209",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 582,
+          "pos_y": -655
+        }
+      }
+    }
+  }
+}
