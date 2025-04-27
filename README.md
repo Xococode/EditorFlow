@@ -1,4 +1,4 @@
-# Editor Drawflow – Guía de Usuario
+# Editor Editflow – Guía de Usuario
 
 Una herramienta visual para crear flujos de datos (sumas, multiplicaciones, lógica, multimedia, etc.) sin escribir código.
 
