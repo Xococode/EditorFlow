@@ -4,6 +4,11 @@ Una herramienta visual para crear flujos de datos (sumas, multiplicaciones, lóg
 
 ---
 
+## Acceso rápido a la aplicación 🚀
+👉 [**Probar en vivo aquí**](https://xococode.github.io/EditorFlow/)
+
+---
+
 ## 1. Navegación del lienzo
 
 - **Pan (mover lienzo)**  
