@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Drawflow - Multimedia y Archivos</title>
+
+    <!-- Drawflow CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/jerosoler/Drawflow/dist/drawflow.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+         /* --- General Styles --- */
+         :root{--node-bg-color:#e3f2fd;--node-border-color:#90caf9;--node-selected-border:#ffeb3b;--title-bg-color:#1976d2;--connection-color:#0d47a1;--grid-color:rgba(0,0,0,0.08);--sidebar-bg:#f8f9fa;--primary-button:#4CAF50;--primary-button-hover:#45a049;--secondary-button:#f0f0f0;--secondary-button-hover:#ddd;--input-bg:#fff;--input-readonly-bg:#e9ecef;--node-shadow:0 4px 8px rgba(0,0,0,0.15);--toast-success-bg:#28a745;--toast-error-bg:#dc3545;--toast-warning-bg:#ffc107;--toast-info-bg:#17a2b8;}
+         body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;padding:0;margin:0;display:flex;height:100vh;background-color:#eef2f7;overflow:hidden}
+         .app-container{display:flex;width:100%;height:100%}
+
+         /* --- Sidebar --- */
+         .sidebar{width:240px;background:var(--sidebar-bg);border-right:1px solid #ccc;display:flex;flex-direction:column;overflow-y:auto;transition:width .3s ease;z-index:10;box-shadow:2px 0 5px rgba(0,0,0,.1)}
+         .sidebar.collapsed{width:55px}
+         .sidebar-toggle{background:#e9ecef;border:none;padding:10px;cursor:pointer;text-align:center;border-bottom:1px solid #ccc;color:#555}
+         .sidebar-toggle:hover{background:#dfe6ec}
+         .search-container{padding:12px;border-bottom:1px solid #ddd;background:#f1f3f5}
+         .search-box{width:100%;padding:8px 12px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box;font-size:.9em}
+         .node-categories{flex-grow:1;overflow-y:auto;padding-top:5px}
+         .category{border-bottom:1px solid #e0e0e0;margin-bottom:5px}
+         .category-header{padding:10px 12px;font-weight:600;background:#e9ecef;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:.95em;color:#333}
+         .category-header:hover{background:#dfe6ec}
+         .category-header .fas{font-size:.9em;margin-right:8px}
+         .category-content{padding:8px;display:flex;flex-wrap:wrap;gap:6px;display:none;background:#fff}
+         .category.open .category-content{display:flex}
+         .sidebar.collapsed .category-header span,.sidebar.collapsed .category-content,.sidebar.collapsed .search-container{display:none}
+         .node-button{padding:6px 10px;margin:2px;cursor:move;border:1px solid #ccc;border-radius:4px;background-color:var(--secondary-button);flex-grow:1;text-align:center;font-size:.88em;display:flex;align-items:center;justify-content:center;gap:6px;transition:background-color .2s}
+         .node-button:hover{background-color:var(--secondary-button-hover);border-color:#bbb}
+         .node-button .fas{color:#555}
+         .sidebar.collapsed .node-button{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center}
+         .sidebar.collapsed .node-button span{display:none}
+
+         /* --- Main Container & Toolbar --- */
+         .main-container{flex-grow:1;display:flex;flex-direction:column;height:100%;overflow:hidden}
+         .toolbar{padding:8px 12px;background:#e9ecef;border-bottom:1px solid #ccc;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+         .toolbar-group{display:flex;gap:6px;border-right:1px solid #ccc;padding-right:10px;margin-right:5px}
+         .toolbar-group:last-child{border-right:none;padding-right:0;margin-right:0}
+         .toolbar button{padding:6px 12px;cursor:pointer;border:1px solid #bbb;border-radius:4px;background-color:var(--secondary-button);display:flex;align-items:center;gap:5px;font-size:.9em}
+         .toolbar button:hover{background-color:var(--secondary-button-hover)}
+         .toolbar button:disabled{opacity:.5;cursor:not-allowed}
+         .toolbar button i{font-size:1em}
+         .spacer{flex-grow:1}
+         .zoom-controls{display:flex;align-items:center;gap:5px}
+         .zoom-level{padding:0 10px;font-size:.9em;min-width:45px;text-align:center;background:#fff;border:1px solid #ccc;border-radius:4px;line-height:28px;height:30px}
+
+         /* --- Drawflow Canvas & Nodes --- */
+         #drawflow{width:100%;flex-grow:1;position:relative;background:#f0f4f8;background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:25px 25px;cursor:grab}
+         #drawflow:active{cursor:grabbing}
+         .drawflow-node{background:var(--node-bg-color);color:#333;border-radius:8px;border:2px solid var(--node-border-color);box-shadow:var(--node-shadow);min-width:180px;display:flex;flex-direction:column;position:relative;transition:box-shadow .2s,transform .1s}
+         .drawflow-node.selected{border-color:var(--node-selected-border);box-shadow:0 0 0 3px var(--node-selected-border),var(--node-shadow)}
+         .drawflow-node:hover{box-shadow:0 6px 12px rgba(0,0,0,.2)}
+         .drawflow .drawflow-node .title-box{background:var(--title-bg-color);color:#fff;padding:10px 12px;border-top-left-radius:6px;border-top-right-radius:6px;font-weight:700;text-align:center;flex-shrink:0;cursor:move;display:flex;justify-content:center;align-items:center;font-size:.95em}
+         .title-box .node-icon{margin-right:8px}
+         .drawflow .drawflow-node .box{padding:12px;flex-grow:1}
+         .drawflow .drawflow-node .box button.add-input-btn{width:auto;padding: 3px 8px; font-size: 0.8em; margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; background-color: #e0e0e0; border: 1px solid #bbb; cursor: pointer;}
+         .drawflow .drawflow-node .box button.add-input-btn:hover{background-color: #d0d0d0;}
+         /* Generic input/textarea styles */
+         .drawflow .drawflow-node .box input:not([type=file]),
+         .drawflow .drawflow-node .box textarea,
+         .drawflow .drawflow-node .box select,
+         .drawflow .drawflow-node .box button:not(.add-input-btn):not(.node-file-input-button):not(.save-button):not(.select-all-btn):not(.fetch-html-btn):not(.save-html-btn) /* Exclude special buttons */
+         {width:100%;padding:8px 10px;margin:5px 0;border-radius:4px;border:1px solid #aaa;box-sizing:border-box;background-color:var(--input-bg);color:#333;font-size:.9em}
+         .drawflow .drawflow-node .box input:not([type=file]),.drawflow .drawflow-node .box select{text-align:center}
+         .drawflow .drawflow-node .box textarea{text-align:left;min-height:50px;resize:vertical}
+         .drawflow .drawflow-node .box textarea[readonly]{background-color:var(--input-readonly-bg);cursor:default;font-style:normal;color:#333;border:1px solid #ced4da;min-height:30px;resize:none;padding:6px 8px;font-family:monospace;white-space:pre-wrap;word-break:break-all}
+         .drawflow .drawflow-node .box input[readonly]:not([type=file]){background-color:var(--input-readonly-bg);cursor:default;font-style:italic;color:#555}
+         .drawflow .drawflow-node .box select{cursor:pointer;text-align-last:center;padding-right:25px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='5' viewBox='0 0 10 5'%3E%3Cpath fill='%23666' d='M0 0l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+         /* Save button (e.g., in saveFile node) */
+         .drawflow .drawflow-node .box button.save-button{background-color:var(--primary-button);color:#fff;font-weight:700;cursor:pointer;border:1px solid #388e3c;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:5px;transition:background-color .2s; width:100%; padding: 8px;}
+         .drawflow .drawflow-node .box button.save-button:hover{background-color:var(--primary-button-hover)}
+         .drawflow .drawflow-node .box label{display:block;text-align:left;margin-bottom:2px;margin-top:6px;font-size:.85em;color:#444;font-weight:500}
+         .node-description{font-size:.8em;color:#555;text-align:center;margin-top:5px;padding:0 5px}
+
+         /* --- Connections & Labels --- */
+         .drawflow .drawflow-node .inputs,.drawflow .drawflow-node .outputs{position:absolute;top:0;height:100%;display:flex;flex-direction:column;justify-content:space-around;z-index:2;width:0;pointer-events:none}
+         .drawflow .drawflow-node .inputs{left:0}
+         .drawflow .drawflow-node .outputs{right:0}
+         .drawflow-node .input,.drawflow-node .output{border:2px solid #757575;width:18px;height:18px;border-radius:50%;cursor:crosshair;background:#fff;position:relative;margin:6px 0;transition:transform .1s,background-color .2s;pointer-events:all}
+         .drawflow-node .input{left:-11px;background:#ffeb3b}
+         .drawflow-node .output{left:11px;background:#03a9f4}
+         .drawflow-node .input:hover,.drawflow-node .output:hover{transform:scale(1.25)}
+         .drawflow-connection .main-path{stroke-width:3px;stroke:var(--connection-color);transition:stroke-width .2s}
+         .drawflow-connection:hover .main-path{stroke-width:5px}
+         .connector-label{position:absolute;font-size:.75em;color:#333;background:rgba(255,255,255,.85);padding:2px 5px;border-radius:3px;opacity:0;transition:opacity .2s ease-in-out;pointer-events:none;white-space:nowrap;transform:translateY(-50%);top:50%;z-index:5;border:1px solid rgba(0,0,0,.1);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+         .input-label{left:16px}
+         .output-label{right:16px}
+         .drawflow-node .input:hover+.input-label,.drawflow-node .output:hover+.output-label{opacity:1}
+
+         /* --- Status Bar --- */
+         .status-bar{padding:6px 12px;background:#e9ecef;border-top:1px solid #ccc;font-size:.85em;display:flex;justify-content:space-between;color:#555}
+         .status-coordinates{min-width:100px}
+         .status-info{font-style:italic}
+
+         /* --- Toast Notifications --- */
+         .toast-container{position:fixed;bottom:20px;right:20px;z-index:1050;max-width:300px}
+         .toast{color:#fff;padding:12px 18px;border-radius:5px;margin-top:10px;font-size:.9em;animation:fadeInOut 4s forwards;display:flex;align-items:center;gap:10px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+         .toast.success{background:var(--toast-success-bg)}
+         .toast.error{background:var(--toast-error-bg)}
+         .toast.warning{background:var(--toast-warning-bg);color:#333}
+         .toast.info{background:var(--toast-info-bg)}
+         .toast i{font-size:1.1em}@keyframes fadeInOut{0%{opacity:0;transform:translateY(20px)}10%{opacity:1;transform:translateY(0)}90%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
+
+         /* --- Context Menu --- */
+         .context-menu{position:absolute;z-index:1010;background:#fff;border:1px solid #ccc;border-radius:5px;box-shadow:0 3px 12px rgba(0,0,0,.15);padding:6px 0;display:none;min-width:160px;font-size:.9em}
+         .context-menu.show{display:block}
+         .context-menu-item{padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;color:#333}
+         .context-menu-item:hover{background-color:#f0f5fa}
+         .context-menu-item i{width:15px;text-align:center;color:#555}
+         .context-menu-divider{height:1px;background-color:#eee;margin:6px 0}
+
+         /* --- Help Panel --- */
+         .help-panel{position:fixed;right:-350px;top:0;width:330px;height:100%;background:#fff;box-shadow:-3px 0 12px rgba(0,0,0,.15);z-index:1020;transition:right .35s ease-out;display:flex;flex-direction:column}
+         .help-panel.show{right:0}
+         .help-header{padding:15px 20px;background:#f5f5f5;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center}
+         .help-header h3{margin:0;font-size:1.1em;color:#333}
+         .help-header .modal-close{cursor:pointer;color:#777;font-size:1.3em}
+         .help-header .modal-close:hover{color:#333}
+         .help-content{padding:20px;overflow-y:auto;flex-grow:1;font-size:.9em;line-height:1.5}
+         .help-section{margin-bottom:20px}
+         .help-section h3{margin-top:0;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:6px;font-size:1.05em;color:#1976d2}
+         .shortcut-item{display:flex;justify-content:space-between;margin-bottom:8px}
+         .shortcut-key{background:#e9ecef;padding:3px 7px;border-radius:4px;font-family:monospace;border:1px solid #ccc;font-size:.95em}
+         .help-panel ul{padding-left:20px;margin-top:5px}
+         .help-panel li{margin-bottom:5px}
+
+         /* --- Modals --- */
+         .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;justify-content:center;align-items:center;z-index:1030;opacity:0;pointer-events:none;transition:opacity .3s ease}
+         .modal-overlay.active{opacity:1;pointer-events:all}
+         .modal{background:#fff;border-radius:8px;width:500px;max-width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 20px rgba(0,0,0,.2);transform:scale(.95);transition:transform .3s ease}
+         .modal-overlay.active .modal{transform:scale(1)}
+         .modal-header{padding:15px 20px;background:#f5f5f5;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;border-top-left-radius:8px;border-top-right-radius:8px}
+         .modal-title{font-weight:600;font-size:1.15em;color:#333}
+         .modal-close{cursor:pointer;font-size:1.4em;color:#777;line-height:1}
+         .modal-close:hover{color:#333}
+         .modal-body{padding:20px;overflow-y:auto;line-height:1.5}
+         .modal-body .form-group{margin-bottom:15px}
+         .modal-body .form-label{display:block;margin-bottom:5px;font-weight:500;font-size:.9em}
+         .modal-body .form-control{width:100%;padding:8px 12px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box}
+         .modal-footer{padding:15px 20px;background:#f5f5f5;border-top:1px solid #ddd;display:flex;justify-content:flex-end;gap:10px;border-bottom-left-radius:8px;border-bottom-right-radius:8px}
+         .modal-footer button{padding:8px 18px;border-radius:4px;border:1px solid #ccc;background:#f0f0f0;cursor:pointer;font-size:.9em;transition:background-color .2s}
+         .modal-footer button.primary{background:var(--primary-button);color:#fff;border-color:#388e3c}
+         .modal-footer button:hover{background:#e0e0e0}
+         .modal-footer button.primary:hover{background:var(--primary-button-hover)}
+
+         /* --- File Input Helper --- */
+         .file-input-container{position:relative;overflow:hidden;display:inline-block}
+         .file-input-container input[type=file]{position:absolute;left:0;top:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:100px}
+         .hidden-file-input { display: none; }
+
+         /* --- Scrollbar --- */
+         ::-webkit-scrollbar{width:10px;height:10px}
+         ::-webkit-scrollbar-track{background:#f1f1f1;border-radius:5px}
+         ::-webkit-scrollbar-thumb{background:#aaa;border-radius:5px}
+         ::-webkit-scrollbar-thumb:hover{background:#888}
+
+         /* --- Node Specific Styles --- */
+         /* Basic Types */
+        .input-node{background:#d1c4e9;border-color:#b39ddb}.input-node .title-box{background:#673ab7}
+        .output-node{background:#d1ecf1;border-color:#bee5eb}.output-node .title-box{background:#17a2b8}
+        .math-node{background:#cce5ff;border-color:#b8daff}.math-node .title-box{background:#007bff}
+        .string-node{background:#d4edda;border-color:#c3e6cb}.string-node .title-box{background:#28a745}
+        .logic-node{background:#f8d7da;border-color:#f5c6cb}.logic-node .title-box{background:#dc3545}
+        .utility-node{background:#e2e3e5;border-color:#d6d8db}.utility-node .title-box{background:#6c757d}
+        .data-node{background:#d1ecf1;border-color:#bee5eb}.data-node .title-box{background:#17a2b8}
+        .note-node{background:#fff3cd;border-color:#ffeeba}.note-node .title-box{background:#ffc107;color:#333}
+        /* Media & File Nodes */
+        .media-node { background: #e1f5fe; border-color: #b3e5fc; } /* Light Cyan */
+        .media-node .title-box { background: #03a9f4; } /* Cyan */
+        .file-node { background: #fffacd; border-color: #fafad2; } /* LemonChiffon */
+        .file-node .title-box { background: #f0e68c; color: #333; } /* Khaki */
+
+        /* --- Styles for elements inside Media/File nodes --- */
+        .node-image-preview { max-width: 100%; max-height: 150px; height: auto; display: block; margin-top: 8px; border: 1px solid #ccc; background-color: #eee; min-height: 50px; text-align: center; line-height: 50px; color: #888; font-size: 0.8em; object-fit: contain; }
+        .node-image-preview:not([src]), .node-image-preview[src=""]::before { content: 'Vista Previa'; display: block; line-height: 50px; }
+        .node-image-preview[src=""] { height: 50px; } /* Ensure empty preview has height */
+        .node-file-input-button { display: block; width: 100%; padding: 6px 10px; margin: 8px 0 5px 0; border-radius: 4px; border: 1px solid #aaa; box-sizing: border-box; background-color: #eee; color: #333; font-size: .9em; cursor: pointer; text-align: center; transition: background-color 0.2s; }
+        .node-file-input-button:hover { background-color: #ddd; }
+        .node-file-input-label { font-size: 0.8em; color: #555; margin-top: 5px; display: block; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; min-height: 1.2em; } /* Added min-height */
+
+        /* --- Style for the 'Select All' button --- */
+        .drawflow .drawflow-node .box button.select-all-btn {
+            width: auto; padding: 4px 10px; font-size: 0.85em; margin-top: 6px; margin-bottom: 4px; margin-left: 0;
+            display: inline-flex; align-items: center; gap: 5px; background-color: #e8e8e8; border: 1px solid #bbb;
+            border-radius: 4px; cursor: pointer; transition: background-color 0.2s; float: right; clear: both;
+        }
+        .drawflow .drawflow-node .box button.select-all-btn:hover { background-color: #d8d8d8; }
+        .drawflow .drawflow-node .box button.select-all-btn i { font-size: 0.9em; }
+
+         /* --- Styles for the Standalone Fetch HTML Node Buttons (Optional, using inline for now) --- */
+         /* You could define classes like .fetch-html-btn, .save-html-btn here for better management */
+         /* .fetch-html-btn { background-color: #4CAF50; ... } */
+         /* .save-html-btn { background-color: #1976D2; ... } */
+
+    </style>
+</head>
+<body>
+     <div class="app-container">
+        <div class="sidebar" id="sidebar">
+             <button class="sidebar-toggle" id="sidebarToggle" title="Contraer/Expandir Barra Lateral"><i class="fas fa-chevron-left"></i></button>
+             <div class="search-container"><input type="text" class="search-box" id="nodeSearch" placeholder="Buscar nodos..."></div>
+             <div class="node-categories">
+                 <!-- Input Nodes -->
+                 <div class="category open"><div class="category-header"><i class="fas fa-sign-in-alt"></i> <span>Entradas</span> <i class="fas fa-chevron-up"></i></div><div class="category-content"><div class="node-button" draggable="true" data-node-type="number"><i class="fas fa-hashtag"></i> <span>Número</span></div><div class="node-button" draggable="true" data-node-type="text"><i class="fas fa-font"></i> <span>Texto</span></div><div class="node-button" draggable="true" data-node-type="boolean"><i class="fas fa-toggle-on"></i> <span>Booleano</span></div><div class="node-button" draggable="true" data-node-type="prompt"><i class="fas fa-comment-alt"></i> <span>Prompt</span></div></div></div>
+                 <!-- Output/Utility Nodes -->
+                 <div class="category"><div class="category-header"><i class="fas fa-sign-out-alt"></i> <span>Salidas/Utilidad</span> <i class="fas fa-chevron-down"></i></div><div class="category-content"><div class="node-button" draggable="true" data-node-type="display"><i class="fas fa-tv"></i> <span>Mostrar Valor</span></div><div class="node-button" draggable="true" data-node-type="displayAndPass"><i class="fas fa-eye"></i> <span>Mostrar y Pasar</span></div><div class="node-button" draggable="true" data-node-type="consoleLog"><i class="fas fa-terminal"></i> <span>Log Consola</span></div><div class="node-button" draggable="true" data-node-type="saveFile"><i class="fas fa-save"></i> <span>Guardar Archivo TXT</span></div><div class="node-button" draggable="true" data-node-type="note"><i class="fas fa-sticky-note"></i> <span>Nota</span></div><div class="node-button" draggable="true" data-node-type="delay"><i class="fas fa-clock"></i> <span>Retraso</span></div>
+                    <!-- **** ADDED STANDALONE NODE BUTTON **** -->
+                    <div class="node-button" draggable="true" data-node-type="fetchHtmlStandalone">
+                        <i class="fas fa-cloud-download-alt"></i> <span>Obtener HTML Web</span>
+                    </div>
+                    <!-- ************************************* -->
+                 </div></div>
+                 <!-- Math Nodes -->
+                 <div class="category"><div class="category-header"><i class="fas fa-calculator"></i> <span>Matemáticas</span> <i class="fas fa-chevron-down"></i></div><div class="category-content"><div class="node-button" draggable="true" data-node-type="add"><i class="fas fa-plus"></i> <span>Sumar</span></div><div class="node-button" draggable="true" data-node-type="subtract"><i class="fas fa-minus"></i> <span>Restar</span></div><div class="node-button" draggable="true" data-node-type="multiply"><i class="fas fa-times"></i> <span>Multiplicar</span></div><div class="node-button" draggable="true" data-node-type="divide"><i class="fas fa-divide"></i> <span>Dividir</span></div><div class="node-button" draggable="true" data-node-type="power"><i class="fas fa-superscript"></i> <span>Potencia</span></div><div class="node-button" draggable="true" data-node-type="sqrt"><i class="fas fa-square-root-alt"></i> <span>Raíz Cuad.</span></div><div class="node-button" draggable="true" data-node-type="round"><i class="fas fa-circle-notch"></i> <span>Redondear</span></div><div class="node-button" draggable="true" data-node-type="abs"><i class="fas fa-ruler-vertical"></i> <span>Absoluto</span></div><div class="node-button" draggable="true" data-node-type="min"><i class="fas fa-arrow-down"></i> <span>Mínimo</span></div><div class="node-button" draggable="true" data-node-type="max"><i class="fas fa-arrow-up"></i> <span>Máximo</span></div><div class="node-button" draggable="true" data-node-type="random"><i class="fas fa-random"></i> <span>Aleatorio</span></div><div class="node-button" draggable="true" data-node-type="sin"><i class="fas fa-wave-square"></i> <span>Seno</span></div><div class="node-button" draggable="true" data-node-type="cos"><i class="fas fa-wave-square"></i> <span>Coseno</span></div><div class="node-button" draggable="true" data-node-type="tan"><i class="fas fa-wave-square"></i> <span>Tangente</span></div><div class="node-button" draggable="true" data-node-type="log"><i class="fas fa-calculator"></i> <span>Logaritmo</span></div></div></div>
+                 <!-- String Nodes -->
+                 <div class="category"><div class="category-header"><i class="fas fa-font"></i> <span>Texto (String)</span> <i class="fas fa-chevron-down"></i></div><div class="category-content"><div class="node-button" draggable="true" data-node-type="concatenate"><i class="fas fa-link"></i> <span>Concatenar</span></div><div class="node-button" draggable="true" data-node-type="substring"><i class="fas fa-cut"></i> <span>Subcadena</span></div><div class="node-button" draggable="true" data-node-type="uppercase"><i class="fas fa-arrow-alt-circle-up"></i> <span>Mayúsculas</span></div><div class="node-button" draggable="true" data-node-type="lowercase"><i class="fas fa-arrow-alt-circle-down"></i> <span>Minúsculas</span></div><div class="node-button" draggable="true" data-node-type="length"><i class="fas fa-ruler-horizontal"></i> <span>Longitud</span></div><div class="node-button" draggable="true" data-node-type="replace"><i class="fas fa-exchange-alt"></i> <span>Reemplazar</span></div><div class="node-button" draggable="true" data-node-type="trim"><i class="fas fa-stream"></i> <span>Trim (Espacios)</span></div><div class="node-button" draggable="true" data-node-type="split"><i class="fas fa-columns"></i> <span>Dividir (Split)</span></div></div></div>
+                 <!-- Logic Nodes -->
+                 <div class="category"><div class="category-header"><i class="fas fa-code-branch"></i> <span>Lógica</span> <i class="fas fa-chevron-down"></i></div><div class="category-content"><div class="node-button" draggable="true" data-node-type="if"><i class="fas fa-question-circle"></i> <span>Si (If)</span></div><div class="node-button" draggable="true" data-node-type="compare"><i class="fas fa-equals"></i> <span>Comparar</span></div><div class="node-button" draggable="true" data-node-type="and"><i class="fas fa-check-double"></i> <span>Y (AND)</span></div><div class="node-button" draggable="true" data-node-type="or"><i class="fas fa-bars"></i> <span>O (OR)</span></div><div class="node-button" draggable="true" data-node-type="not"><i class="fas fa-exclamation"></i> <span>NO (NOT)</span></div><div class="node-button" draggable="true" data-node-type="ternary"><i class="fas fa-code-branch"></i> <span>Ternario</span></div></div></div>
+                 <!-- Data/Type Nodes -->
+                 <div class="category"><div class="category-header"><i class="fas fa-database"></i> <span>Datos y Tipos</span> <i class="fas fa-chevron-down"></i></div><div class="category-content"><div class="node-button" draggable="true" data-node-type="getType"><i class="fas fa-info-circle"></i> <span>Obtener Tipo</span></div><div class="node-button" draggable="true" data-node-type="toNumber"><i class="fas fa-exchange-alt"></i> <span>A Número</span></div><div class="node-button" draggable="true" data-node-type="toString"><i class="fas fa-exchange-alt"></i> <span>A Texto</span></div><div class="node-button" draggable="true" data-node-type="parseJson"><i class="fas fa-file-code"></i> <span>Parsear JSON</span></div><div class="node-button" draggable="true" data-node-type="stringifyJson"><i class="fas fa-file-alt"></i> <span>Texto JSON</span></div><div class="node-button" draggable="true" data-node-type="createArray"><i class="fas fa-list-ol"></i> <span>Crear Array</span></div></div></div>
+                 <!-- Date/Time Nodes -->
+                 <div class="category"><div class="category-header"><i class="far fa-calendar-alt"></i> <span>Fecha y Hora</span> <i class="fas fa-chevron-down"></i></div><div class="category-content"><div class="node-button" draggable="true" data-node-type="getDate"><i class="far fa-clock"></i> <span>Fecha Actual</span></div><div class="node-button" draggable="true" data-node-type="formatDate"><i class="fas fa-align-left"></i> <span>Formatear Fecha</span></div></div></div>
+                 <!-- HTML Media Nodes -->
+                 <div class="category"><div class="category-header"><i class="fas fa-photo-video"></i> <span>Multimedia (HTML)</span> <i class="fas fa-chevron-down"></i></div><div class="category-content">
+                     <div class="node-button" draggable="true" data-node-type="image"><i class="fas fa-image"></i> <span>Imagen HTML</span></div>
+                     <div class="node-button" draggable="true" data-node-type="video"><i class="fas fa-video"></i> <span>Video HTML</span></div>
+                 </div></div>
+                 <!-- Local File Nodes -->
+                <div class="category">
+                    <div class="category-header"><i class="fas fa-folder-open"></i> <span>Archivos Locales</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="category-content">
+                        <div class="node-button" draggable="true" data-node-type="loadImageAndView"><i class="fas fa-camera-retro"></i> <span>Cargar Imagen (Vista)</span></div>
+                        <div class="node-button" draggable="true" data-node-type="loadTextFile"><i class="fas fa-file-upload"></i> <span>Cargar Archivo Texto</span></div>
+                        <!-- Node to display loaded Data URL -->
+                        <div class="node-button" draggable="true" data-node-type="displayDataUrlImage"><i class="fas fa-image"></i> <span>Mostrar Imagen Cargada</span></div>
+                    </div>
+                </div>
+             </div> <!-- End node-categories -->
+        </div> <!-- End sidebar -->
+
+        <div class="main-container">
+             <div class="toolbar">
+                 <div class="toolbar-group"><button id="newFlowBtn" title="Nuevo Flujo (Ctrl+N)"><i class="fas fa-file"></i> <span>Nuevo</span></button><div class="file-input-container"><button title="Abrir Flujo (Ctrl+O)"><i class="fas fa-folder-open"></i> <span>Abrir</span></button><input type="file" id="importFlow" accept=".json,.drawflow"></div><button id="saveFlowBtn" title="Guardar Flujo (Ctrl+S)"><i class="fas fa-save"></i> <span>Guardar</span></button></div><div class="toolbar-group"><button id="undoBtn" title="Deshacer (Ctrl+Z)" disabled><i class="fas fa-undo"></i> <span>Deshacer</span></button><button id="redoBtn" title="Rehacer (Ctrl+Y)" disabled><i class="fas fa-redo"></i> <span>Rehacer</span></button></div><div class="toolbar-group"><button id="copyBtn" title="Copiar (Ctrl+C)" disabled><i class="fas fa-copy"></i></button><button id="pasteBtn" title="Pegar (Ctrl+V)" disabled><i class="fas fa-paste"></i></button><button id="deleteBtn" title="Eliminar (Supr)" disabled><i class="fas fa-trash"></i></button></div><div class="toolbar-group"><button id="clearConsoleBtn" title="Limpiar Log de Consola"><i class="fas fa-eraser"></i></button><button id="recalculateBtn" title="Forzar Recálculo"><i class="fas fa-sync-alt"></i></button></div><div class="spacer"></div><div class="zoom-controls"><button id="zoomOutBtn" title="Alejar Zoom"><i class="fas fa-search-minus"></i></button><span class="zoom-level" id="zoomLevel">100%</span><button id="zoomInBtn" title="Acercar Zoom"><i class="fas fa-search-plus"></i></button><button id="zoomResetBtn" title="Restablecer Zoom (Ajustar Todo)"><i class="fas fa-expand-arrows-alt"></i></button></div><button id="helpBtn" title="Mostrar Ayuda"><i class="fas fa-question-circle"></i></button>
+            </div>
+            <div id="drawflow"></div>
+            <div class="status-bar"><div class="status-coordinates" id="coordinates">X: 0, Y: 0</div><div class="status-info" id="statusInfo">Listo</div></div>
+        </div> <!-- End main-container -->
+    </div> <!-- End app-container -->
+
+    <!-- Context Menu Structure -->
+    <div class="context-menu" id="contextMenu"><div class="context-menu-item" id="ctxCopy"><i class="fas fa-copy fa-fw"></i> Copiar Nodo</div><div class="context-menu-item" id="ctxPaste"><i class="fas fa-paste fa-fw"></i> Pegar Nodo</div><div class="context-menu-divider"></div><div class="context-menu-item" id="ctxDelete"><i class="fas fa-trash fa-fw"></i> Eliminar Nodo</div><div class="context-menu-divider"></div><div class="context-menu-item" id="ctxRecalculate"><i class="fas fa-sync-alt fa-fw"></i> Recalcular Nodo</div></div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Help Panel Structure -->
+    <div class="help-panel" id="helpPanel"><div class="help-header"><h3>Ayuda y Atajos</h3><i class="fas fa-times modal-close" id="closeHelp"></i></div><div class="help-content"><div class="help-section"> <h3>Navegación</h3> <div class="shortcut-item"><span>Mover Lienzo</span><span class="shortcut-key">Click Derecho Arrastrar / Botón Central Ratón</span></div> <div class="shortcut-item"><span>Zoom In/Out</span><span class="shortcut-key">Rueda del ratón</span></div> </div><div class="help-section"> <h3>Edición</h3> <div class="shortcut-item"><span>Deshacer</span><span class="shortcut-key">Ctrl+Z</span></div> <div class="shortcut-item"><span>Rehacer</span><span class="shortcut-key">Ctrl+Y / Ctrl+Shift+Z</span></div> <div class="shortcut-item"><span>Eliminar Nodo</span><span class="shortcut-key">Supr / Retroceso</span></div> <div class="shortcut-item"><span>Copiar Nodo</span><span class="shortcut-key">Ctrl+C (con nodo seleccionado)</span></div> <div class="shortcut-item"><span>Pegar Nodo</span><span class="shortcut-key">Ctrl+V</span></div> <div class="shortcut-item"><span>Seleccionar Nodo</span><span class="shortcut-key">Click Izquierdo</span></div> </div><div class="help-section"> <h3>Archivo</h3> <div class="shortcut-item"><span>Nuevo Flujo</span><span class="shortcut-key">Ctrl+N</span></div> <div class="shortcut-item"><span>Guardar Flujo</span><span class="shortcut-key">Ctrl+S</span></div> <div class="shortcut-item"><span>Abrir Flujo</span><span class="shortcut-key">Ctrl+O</span></div> </div><div class="help-section"> <h3>Consejos</h3> <ul> <li>Arrastra nodos desde la barra lateral izquierda al lienzo.</li> <li>Conecta los puntos (salidas azules a entradas amarillas).</li><li><strong>Importante:</strong> El nodo "Imagen HTML" genera CÓDIGO HTML. El nodo "Cargar Imagen (Vista)" genera un Data URL que puede usarse en el nodo "Mostrar Imagen Cargada".</li> <li>Usa el nodo <strong>Crear Array</strong> para combinar múltiples valores en una sola conexión.</li><li>Haz clic derecho en un nodo o en el lienzo para el menú contextual.</li> <li>Pasa el ratón sobre los conectores para ver sus nombres.</li> <li>Usa el nodo "Log Consola" para depurar valores intermedios (mira la consola del navegador con F12).</li> <li>Guarda tu trabajo frecuentemente.</li> </ul> </div></div></div>
+
+    <!-- Modal Structures -->
+    <div class="modal-overlay" id="newFlowModal"><div class="modal"> <div class="modal-header"> <div class="modal-title">Nuevo Flujo</div> <i class="fas fa-times modal-close" data-modal="newFlowModal"></i> </div> <div class="modal-body"> <p>¿Limpiar el lienzo actual y empezar un nuevo flujo? Los cambios no guardados se perderán.</p> </div> <div class="modal-footer"> <button data-modal="newFlowModal">Cancelar</button> <button class="primary" id="confirmNewFlow">Crear Nuevo</button> </div> </div></div>
+    <div class="modal-overlay" id="saveFlowModal"><div class="modal"> <div class="modal-header"> <div class="modal-title">Guardar Flujo</div> <i class="fas fa-times modal-close" data-modal="saveFlowModal"></i> </div> <div class="modal-body"> <div class="form-group"> <label class="form-label" for="flowName">Nombre del archivo (sin extensión)</label> <input type="text" id="flowName" class="form-control" value="mi-flujo"> </div> <p style="font-size: 0.85em; color: #666;">El archivo se guardará como <code id="savePreviewName">mi-flujo.drawflow</code></p> </div> <div class="modal-footer"> <button data-modal="saveFlowModal">Cancelar</button> <button class="primary" id="confirmSaveFlow">Guardar Flujo</button> </div> </div></div>
+    <div class="modal-overlay" id="confirmImportModal"><div class="modal"> <div class="modal-header"> <div class="modal-title">Confirmar Importación</div> <i class="fas fa-times modal-close" data-modal="confirmImportModal"></i> </div> <div class="modal-body"> <p>Importar este archivo reemplazará el flujo actual. Los cambios no guardados se perderán. ¿Continuar?</p> </div> <div class="modal-footer"> <button data-modal="confirmImportModal">Cancelar</button> <button class="primary" id="confirmImportAction">Importar</button> </div> </div></div>
+
+    <!-- Drawflow JS -->
+    <script src="https://cdn.jsdelivr.net/gh/jerosoler/Drawflow/dist/drawflow.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DOM Elements ---
+            const container = document.getElementById('drawflow');
+            const coordinatesDisplay = document.getElementById('coordinates');
+            const statusInfo = document.getElementById('statusInfo');
+            const zoomLevelDisplay = document.getElementById('zoomLevel');
+            const toastContainer = document.getElementById('toastContainer');
+            const contextMenu = document.getElementById('contextMenu');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const helpPanel = document.getElementById('helpPanel');
+            const nodeSearch = document.getElementById('nodeSearch');
+            const newFlowBtn = document.getElementById('newFlowBtn');
+            const saveFlowBtn = document.getElementById('saveFlowBtn');
+            const importFlowInput = document.getElementById('importFlow');
+            const undoBtn = document.getElementById('undoBtn');
+            const redoBtn = document.getElementById('redoBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const pasteBtn = document.getElementById('pasteBtn');
+            const deleteBtn = document.getElementById('deleteBtn');
+            const zoomInBtn = document.getElementById('zoomInBtn');
+            const zoomOutBtn = document.getElementById('zoomOutBtn');
+            const zoomResetBtn = document.getElementById('zoomResetBtn');
+            const helpBtn = document.getElementById('helpBtn');
+            const closeHelpBtn = document.getElementById('closeHelp');
+            const clearConsoleBtn = document.getElementById('clearConsoleBtn');
+            const recalculateBtn = document.getElementById('recalculateBtn');
+            const saveModal = document.getElementById('saveFlowModal');
+            const newFlowModal = document.getElementById('newFlowModal');
+            const confirmImportModal = document.getElementById('confirmImportModal');
+            const confirmSaveFlowBtn = document.getElementById('confirmSaveFlow');
+            const confirmNewFlowBtn = document.getElementById('confirmNewFlow');
+            const confirmImportActionBtn = document.getElementById('confirmImportAction');
+            const flowNameInput = document.getElementById('flowName');
+            const savePreviewName = document.getElementById('savePreviewName');
+
+            // --- Initialize Drawflow ---
+            const editor = new Drawflow(container);
+            editor.reroute = true;
+            editor.curvature = 0.5;
+            editor.reroute_fix_curvature = true;
+            editor.force_first_input = false; // Allow nodes with 0 inputs
+            editor.start();
+
+            // --- Global State ---
+            let selectedNodeId = null;
+            let clipboardNodeData = null;
+            let lastMousePosition = { x: 0, y: 0 };
+            let currentContextMenuTarget = null;
+            let hasUnsavedChanges = false;
+            let fileToImport = null;
+            const MAX_ADD_INPUTS = 10; // Max inputs for 'add' node
+
+            // --- Node Definitions ---
+            const nodeDefinitions = {
+                // Input Nodes
+                'number':{inputs:0,outputs:1,html:`<div><div class="title-box"><i class="fas fa-hashtag node-icon"></i> Número</div><div class="box"><label for="df-value">Valor:</label><input type="number" df-value value="0" step="any"></div></div>`,class:'input-node',defaultData:{value:0}},
+                'text':{inputs:0,outputs:1,html:`<div><div class="title-box"><i class="fas fa-font node-icon"></i> <span class="node-title-text">Texto</span></div><div class="box"><label for="df-customTitle">Título del Nodo:</label><input type="text" df-customTitle placeholder="Título personalizado..."><label for="df-value">Contenido:</label><textarea df-value placeholder="Introduce texto..." style="min-height: 80px;"></textarea></div></div>`,class:'input-node',defaultData:{value:"",customTitle:""}},
+                'boolean':{inputs:0,outputs:1,html:`<div><div class="title-box"><i class="fas fa-toggle-on node-icon"></i> Booleano</div><div class="box"><label for="df-value">Valor:</label><select df-value><option value="true">Verdadero (true)</option><option value="false">Falso (false)</option></select></div></div>`,class:'input-node',defaultData:{value:"true"}},
+                'prompt':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-comment-alt node-icon"></i> Prompt (Pregunta)</div><div class="box"><label for="df-message">Mensaje Predeterminado:</label><input type="text" df-message value="Introduce un valor:"><div class="node-description">Muestra un diálogo al usuario. La entrada 1 es el valor por defecto.</div></div></div>`,class:'input-node',defaultData:{message:"Introduce un valor:"}},
+
+                // Output/Utility Nodes
+                'display':{inputs:1,outputs:0,html:`<div><div class="title-box"><i class="fas fa-tv node-icon"></i> Mostrar Valor</div><div class="box"><label for="df-result">Resultado:</label><textarea df-result readonly>---</textarea></div></div>`,class:'output-node',defaultData:{result:'---'}},
+                'displayAndPass':{
+                    inputs:1, outputs:1,
+                    html:`<div>
+                            <div class="title-box"><i class="fas fa-eye node-icon"></i> Mostrar y Pasar</div>
+                            <div class="box">
+                                <label for="df-result">Resultado:</label>
+                                <textarea df-result readonly>---</textarea>
+                                <button class="select-all-btn" title="Seleccionar todo el contenido">
+                                    <i class="fas fa-copy"></i> Seleccionar Todo
+                                </button>
+                                <div style="clear: both;"></div>
+                                <div class="node-description" style="margin-top: 8px;">Muestra y pasa el valor.</div>
+                            </div>
+                        </div>`,
+                    class:'output-node', defaultData:{result:'---'}
+                },
+                'consoleLog':{inputs:1,outputs:0,html:`<div><div class="title-box"><i class="fas fa-terminal node-icon"></i> Log Consola</div><div class="box"><label for="df-prefix">Prefijo (opcional):</label><input type="text" df-prefix placeholder="Valor: "><div class="node-description">Muestra el valor en la consola del navegador (F12).</div></div></div>`,class:'utility-node',defaultData:{prefix:''}},
+                'saveFile':{inputs:1,outputs:0,html:`<div><div class="title-box"><i class="fas fa-save node-icon"></i> Guardar Archivo TXT</div><div class="box"><label for="df-filename">Nombre Archivo:</label><input type="text" df-filename value="output.txt" placeholder="output.txt"><label for="df-currentvalue">Valor Actual:</label><input type="text" df-currentvalue readonly value="---" style="font-style: italic;"><button class="save-button" title="Guardar el valor actual como texto plano"><i class="fas fa-download"></i> Guardar TXT</button></div></div>`,class:'output-node',defaultData:{filename:'output.txt',currentvalue:'---'}},
+                'note':{inputs:0,outputs:0,html:`<div><div class="title-box"><i class="fas fa-sticky-note node-icon"></i> Nota</div><div class="box"><textarea df-note placeholder="Añade tus notas aquí..." style="min-height: 80px;"></textarea></div></div>`,class:'note-node',defaultData:{note:''}},
+                'delay':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-clock node-icon"></i> Retraso (Delay)</div><div class="box"><label for="df-ms">Milisegundos:</label><input type="number" df-ms value="1000" min="0"><div class="node-description">Espera antes de pasar el valor. (Requiere ejecución asíncrona no implementada aquí).</div></div></div>`,class:'utility-node',defaultData:{ms:1000}},
+
+                // **** NEW STANDALONE FETCH HTML NODE ****
+                'fetchHtmlStandalone': {
+                    inputs: 0, outputs: 0, // No connections
+                    html: `
+                        <div>
+                            <div class="title-box">
+                                <i class="fas fa-cloud-download-alt node-icon"></i> Obtener HTML Web
+                            </div>
+                            <div class="box">
+                                <label for="df-url">URL a obtener:</label>
+                                <input type="text" df-url placeholder="https://ejemplo.com">
+
+                                <button class="fetch-html-btn" style="background-color: #4CAF50; color: white; margin-top: 10px; width:100%; padding: 8px; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;" title="Obtener el contenido HTML de la URL">
+                                    <i class="fas fa-download"></i> Obtener HTML Ahora
+                                </button>
+
+                                <div class="fetch-status" style="margin-top: 8px; font-size: 0.85em; text-align: center; min-height: 1.2em; color: #555;"></div>
+
+                                <label for="df-preview" style="margin-top: 10px;">Vista Previa HTML (solo lectura):</label>
+                                <textarea df-preview readonly style="min-height: 100px; max-height: 200px; font-family: monospace; font-size: 0.8em; background-color: #e9ecef; border: 1px solid #ced4da;" placeholder="El HTML aparecerá aquí..."></textarea>
+
+                                <button class="save-html-btn" style="background-color: #1976D2; color: white; margin-top: 10px; width:100%; padding: 8px; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;" title="Guardar el contenido de la vista previa como archivo TXT" disabled>
+                                    <i class="fas fa-save"></i> Guardar TXT
+                                </button>
+
+                                <p class="node-description" style="margin-top: 12px; font-size: 0.8em; color: #666; background-color: #fff9c4; padding: 5px; border-radius: 3px; border: 1px solid #fbc02d;">
+                                    Obtiene el HTML de la URL (vía proxy CORS).
+                                    <strong>Advertencia:</strong> Usa un proxy público (allorigins.win), puede fallar o ser lento. No captura contenido renderizado por JS.
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                    class: 'utility-node',
+                    defaultData: { url: "", previewContent: "", fetchStatus: "" }
+                },
+                // ***************************************
+
+                // Math Nodes
+                'add':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-plus node-icon"></i> Sumar (+)</div><div class="box"><div class="node-description" style="margin-bottom: 8px;">Suma los valores numéricos de todas las entradas conectadas.</div><button class="add-input-btn"><i class="fas fa-plus"></i> Añadir Entrada</button></div></div>`,class:'math-node',defaultData:{}},
+                'subtract':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-minus node-icon"></i> Restar (-)</div></div>`,class:'math-node',defaultData:{}},
+                'multiply':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-times node-icon"></i> Multiplicar (*)</div></div>`,class:'math-node',defaultData:{}},
+                'divide':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-divide node-icon"></i> Dividir (/)</div></div>`,class:'math-node',defaultData:{}},
+                'power':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-superscript node-icon"></i> Potencia (^)</div></div>`,class:'math-node',defaultData:{}},
+                'sqrt':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-square-root-alt node-icon"></i> Raíz Cuadrada</div></div>`,class:'math-node',defaultData:{}},
+                'round':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-circle-notch node-icon"></i> Redondear</div><div class="box"><label for="df-decimals">Decimales:</label><input type="number" df-decimals value="0" min="0" max="10"></div></div>`,class:'math-node',defaultData:{decimals:0}},
+                'abs':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-ruler-vertical node-icon"></i> Valor Absoluto</div></div>`,class:'math-node',defaultData:{}},
+                'min':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-arrow-down node-icon"></i> Mínimo (Min)</div></div>`,class:'math-node',defaultData:{}},
+                'max':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-arrow-up node-icon"></i> Máximo (Max)</div></div>`,class:'math-node',defaultData:{}},
+                'random':{inputs:0,outputs:1,html:`<div><div class="title-box"><i class="fas fa-random node-icon"></i> Nº Aleatorio</div><div class="node-description">Genera nº entre 0 y 1.</div></div>`,class:'math-node',defaultData:{}},
+                'sin':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-wave-square node-icon"></i> Seno (Sin)</div><div class="node-description">Entrada en radianes.</div></div>`,class:'math-node',defaultData:{}},
+                'cos':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-wave-square node-icon"></i> Coseno (Cos)</div><div class="node-description">Entrada en radianes.</div></div>`,class:'math-node',defaultData:{}},
+                'tan':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-wave-square node-icon"></i> Tangente (Tan)</div><div class="node-description">Entrada en radianes.</div></div>`,class:'math-node',defaultData:{}},
+                'log':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-calculator node-icon"></i> Logaritmo Natural (Ln)</div></div>`,class:'math-node',defaultData:{}},
+
+                // String Nodes
+                'concatenate':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-link node-icon"></i> Concatenar</div></div>`,class:'string-node',defaultData:{}},
+                'substring':{inputs:3,outputs:1,html:`<div><div class="title-box"><i class="fas fa-cut node-icon"></i> Subcadena</div><div class="box"><label for="df-start">Inicio (0-index):</label><input type="number" df-start value="0" min="0"><label for="df-end">Fin (opcional):</label><input type="number" df-end placeholder="Hasta el final"></div><div class="node-description">In: 1=Texto, 2=Inicio, 3=Fin</div></div>`,class:'string-node',defaultData:{start:0,end:null}},
+                'uppercase':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-arrow-alt-circle-up node-icon"></i> A Mayúsculas</div></div>`,class:'string-node',defaultData:{}},
+                'lowercase':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-arrow-alt-circle-down node-icon"></i> A Minúsculas</div></div>`,class:'string-node',defaultData:{}},
+                'length':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-ruler-horizontal node-icon"></i> Longitud</div><div class="node-description">Longitud de texto o array.</div></div>`,class:'string-node',defaultData:{}},
+                'replace':{inputs:3,outputs:1,html:`<div><div class="title-box"><i class="fas fa-exchange-alt node-icon"></i> Reemplazar</div><div class="box"><label for="df-global">Global (todas):</label><select df-global><option value="false">No (primera)</option><option value="true">Sí (todas)</option></select></div><div class="node-description">In: 1=Texto, 2=Buscar, 3=Reemplazar</div></div>`,class:'string-node',defaultData:{global:"false"}},
+                'trim':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-stream node-icon"></i> Trim (Espacios)</div><div class="node-description">Elimina espacios al inicio/fin.</div></div>`,class:'string-node',defaultData:{}},
+                'split':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-columns node-icon"></i> Dividir (Split)</div><div class="node-description">In: 1=Texto, 2=Separador. Devuelve array.</div></div>`,class:'string-node',defaultData:{}},
+
+                // Logic Nodes
+                'if':{inputs:3,outputs:1,html:`<div><div class="title-box"><i class="fas fa-question-circle node-icon"></i> Si (If)</div><div class="node-description">1=Condición, 2=Si Verdadero, 3=Si Falso</div></div>`,class:'logic-node',defaultData:{}},
+                'compare':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-equals node-icon"></i> Comparar</div><div class="box"><label for="df-operator">Operador:</label><select df-operator><option value="eq">== (Igual valor)</option><option value="seq">=== (Igual valor y tipo)</option><option value="neq">!= (Distinto valor)</option><option value="sneq">!== (Distinto valor o tipo)</option><option value="gt">> (Mayor que)</option><option value="lt">< (Menor que)</option><option value="gte">>= (Mayor o igual)</option><option value="lte"><= (Menor o igual)</option></select></div></div>`,class:'logic-node',defaultData:{operator:"eq"}},
+                'and':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-check-double node-icon"></i> Y Lógico (AND)</div></div>`,class:'logic-node',defaultData:{}},
+                'or':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-bars node-icon"></i> O Lógico (OR)</div></div>`,class:'logic-node',defaultData:{}},
+                'not':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-exclamation node-icon"></i> NO Lógico (NOT)</div></div>`,class:'logic-node',defaultData:{}},
+                'ternary':{inputs:3,outputs:1,html:`<div><div class="title-box"><i class="fas fa-code-branch node-icon"></i> Operador Ternario</div><div class="node-description">Similar a 'If', más compacto. 1=Cond, 2=True, 3=False</div></div>`,class:'logic-node',defaultData:{}},
+
+                // Data/Type Nodes
+                'getType':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-info-circle node-icon"></i> Obtener Tipo</div><div class="node-description">Devuelve el tipo de dato (string, number, boolean, object, undefined).</div></div>`,class:'data-node',defaultData:{}},
+                'toNumber':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-exchange-alt node-icon"></i> Convertir a Número</div></div>`,class:'data-node',defaultData:{}},
+                'toString':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-exchange-alt node-icon"></i> Convertir a Texto</div></div>`,class:'data-node',defaultData:{}},
+                'parseJson':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-file-code node-icon"></i> Parsear JSON</div><div class="node-description">Convierte texto JSON a objeto/array.</div></div>`,class:'data-node',defaultData:{}},
+                'stringifyJson':{inputs:1,outputs:1,html:`<div><div class="title-box"><i class="fas fa-file-alt node-icon"></i> Texto JSON (Stringify)</div><div class="box"><label for="df-pretty">Formato legible:</label><select df-pretty><option value="false">No (compacto)</option><option value="true">Sí (indentado)</option></select></div><div class="node-description">Convierte objeto/array a texto JSON.</div></div>`,class:'data-node',defaultData:{pretty:"false"}},
+                'createArray':{inputs:5,outputs:1,html:`<div><div class="title-box"><i class="fas fa-list-ol node-icon"></i> Crear Array</div><div class="box node-description">Recoge valores de las entradas conectadas en un array. Añade más entradas si es necesario (requiere modificación del código).</div></div>`,class:'data-node',defaultData:{}}, // Note: Adding inputs dynamically not implemented here
+
+                // Date/Time Nodes
+                'getDate':{inputs:0,outputs:1,html:`<div><div class="title-box"><i class="far fa-clock node-icon"></i> Fecha/Hora Actual</div><div class="node-description">Devuelve objeto Date.</div></div>`,class:'data-node',defaultData:{}},
+                'formatDate':{inputs:2,outputs:1,html:`<div><div class="title-box"><i class="fas fa-align-left node-icon"></i> Formatear Fecha</div><div class="box"><label for="df-format">Formato (ej: YYYY-MM-DD HH:mm:ss):</label><input type="text" df-format value="YYYY-MM-DD HH:mm:ss"></div><div class="node-description">In: 1=Objeto Date, 2=Formato. Usa tokens Y,M,D,H,m,s.</div></div>`,class:'data-node',defaultData:{format:'YYYY-MM-DD HH:mm:ss'}},
+
+                // HTML Media Nodes
+                'image': { inputs: 0, outputs: 1, html: `<div><div class="title-box"><i class="fas fa-image node-icon"></i> Imagen HTML</div><div class="box"><label for="df-src">URL Imagen (src):</label><input type="text" df-src placeholder="https://..."><label for="df-alt">Texto Alternativo (alt):</label><input type="text" df-alt placeholder="Descripción..."><label for="df-width">Ancho (opcional):</label><input type="text" df-width placeholder="ej: 300px o 50%"><label for="df-height">Alto (opcional):</label><input type="text" df-height placeholder="ej: 200px"><div class="node-description">Genera una etiqueta HTML <img>. ¡SALIDA ES TEXTO HTML!</div></div></div>`, class: 'media-node', defaultData: { src: "", alt: "", width: "", height: "" } },
+                'video': { inputs: 0, outputs: 1, html: `<div><div class="title-box"><i class="fas fa-video node-icon"></i> Video HTML</div><div class="box"><label for="df-src">URL Video (src):</label><input type="text" df-src placeholder="video.mp4"><label for="df-width">Ancho (opcional):</label><input type="text" df-width placeholder="ej: 400px"><label for="df-height">Alto (opcional):</label><input type="text" df-height placeholder="ej: 300px"><label for="df-controls">Mostrar Controles:</label><select df-controls><option value="true">Sí</option><option value="false">No</option></select><label for="df-autoplay">Autoplay:</label><select df-autoplay><option value="false">No</option><option value="true">Sí (requiere 'muted')</option></select><label for="df-muted">Silenciado (Muted):</label><select df-muted><option value="false">No</option><option value="true">Sí</option></select><label for="df-loop">Bucle (Loop):</label><select df-loop><option value="false">No</option><option value="true">Sí</option></select><div class="node-description">Genera una etiqueta HTML <video>. ¡SALIDA ES TEXTO HTML!</div></div></div>`, class: 'media-node', defaultData: { src: "", width: "", height: "", controls: "true", autoplay: "false", muted: "false", loop: "false" } },
+
+                // Local File Nodes
+                'loadImageAndView': { inputs: 0, outputs: 1, html: `<div><div class="title-box"><i class="fas fa-camera-retro node-icon"></i> Cargar Imagen (Vista)</div><div class="box"><button class="node-file-input-button" title="Seleccionar archivo de imagen local">Seleccionar Imagen</button><input type="file" class="hidden-file-input" accept="image/*"><span class="node-file-input-label" df-filename>Ningún archivo seleccionado</span><img class="node-image-preview" df-preview-src alt="Vista previa"><div class="node-description">Carga img local y muestra vista previa. Sale Data URL.</div></div></div>`, class: 'media-node', defaultData: { imageDataUrl: null, filename: "Ningún archivo seleccionado" } },
+                'loadTextFile': { inputs: 0, outputs: 1, html: `<div><div class="title-box"><i class="fas fa-file-upload node-icon"></i> Cargar Archivo Texto</div><div class="box"><button class="node-file-input-button" title="Seleccionar archivo de texto local (.txt, .json, .csv, .md...)">Seleccionar Archivo</button><input type="file" class="hidden-file-input" accept=".txt,.json,.csv,.md,.xml,.html,.css,.js,.log,.yaml,.ini"><span class="node-file-input-label" df-filename>Ningún archivo seleccionado</span><textarea df-preview-content readonly style="min-height: 40px; height: 60px; font-size: 0.8em; margin-top: 5px; background-color: #f8f8f8; border: 1px solid #ddd; color: #555;" placeholder="Vista previa del contenido..."></textarea><div class="node-description">Carga archivo de texto local. Sale contenido.</div></div></div>`, class: 'file-node', defaultData: { fileContent: null, filename: "Ningún archivo seleccionado" } },
+                'displayDataUrlImage': { inputs: 1, outputs: 1, html: `<div><div class="title-box"><i class="fas fa-image node-icon"></i> Mostrar Imagen Cargada</div><div class="box"><img class="node-image-preview" df-display-src alt="Imagen desde Data URL"><div class="node-description">Muestra imagen de Data URL de entrada y la pasa a la salida. Conectar a 'Cargar Imagen'.</div></div></div>`, class: 'media-node', defaultData: {} }
+            };
+
+            // --- Connector Labels ---
+            const nodeInputLabels = { 'prompt':['Valor Defecto'],'display':['Valor'],'displayAndPass':['Valor'],'consoleLog':['Valor'],'saveFile':['Contenido'],'delay':['Valor Entrada'],'add':[],'subtract':['A','B'],'multiply':['A','B'],'divide':['Dividendo','Divisor'],'power':['Base','Exponente'],'sqrt':['Número'],'round':['Número'],'abs':['Número'],'min':['A','B'],'max':['A','B'],'sin':['Radianes'],'cos':['Radianes'],'tan':['Radianes'],'log':['Número'],'concatenate':['Texto 1','Texto 2'],'substring':['Texto','Inicio','Fin'],'uppercase':['Texto'],'lowercase':['Texto'],'length':['Valor'],'replace':['Texto','Buscar','Reemplazar'],'trim':['Texto'],'split':['Texto','Separador'],'if':['Condición','Si True','Si False'],'compare':['A','B'],'and':['Bool 1','Bool 2'],'or':['Bool 1','Bool 2'],'not':['Booleano'],'ternary':['Condición','Si True','Si False'],'getType':['Valor'],'toNumber':['Valor'],'toString':['Valor'],'parseJson':['Texto JSON'],'stringifyJson':['Objeto/Array'],'createArray':['Item 1','Item 2','Item 3','Item 4','Item 5'],'formatDate':['Objeto Date','Formato'],'displayDataUrlImage': ['Data URL (In)'] };
+            const nodeOutputLabels = { 'number':['Num'],'text':['Texto'],'boolean':['Bool'],'prompt':['Salida Usuario'],'add':['Suma'],'displayAndPass':['Valor Salida'],'subtract':['Resta'],'multiply':['Producto'],'divide':['Cociente'],'power':['Resultado'],'sqrt':['Raíz'],'round':['Redondeado'],'abs':['Absoluto'],'min':['Mín'],'max':['Máx'],'random':['Aleatorio'],'sin':['Seno'],'cos':['Coseno'],'tan':['Tangente'],'log':['Ln'],'delay':['Valor Salida'],'concatenate':['Concatenado'],'substring':['Subcadena'],'uppercase':['MAYÚSCULAS'],'lowercase':['minúsculas'],'length':['Longitud'],'replace':['Reemplazado'],'trim':['Trimmed'],'split':['Array'],'if':['Resultado'],'compare':['Bool'],'and':['Bool'],'or':['Bool'],'not':['Bool'],'ternary':['Resultado'],'getType':['Tipo (texto)'],'toNumber':['Número'],'toString':['Texto'],'parseJson':['Objeto/Array'],'stringifyJson':['Texto JSON'],'createArray':['Array'],'getDate':['Objeto Date'],'formatDate':['Fecha Formateada'], 'image': ['HTML <img (Texto)'], 'video': ['HTML <video> (Texto)'], 'loadImageAndView': ['Data URL'], 'loadTextFile': ['Contenido Texto'], 'displayDataUrlImage': ['Data URL (Out)'] };
+
+            // --- Helper Functions ---
+            function showToast(message, type = 'info', duration = 4000) {
+                // ... (Toast implementation - no changes needed)
+                const toast=document.createElement('div'); toast.className=`toast ${type}`; let iconClass='fas fa-info-circle'; if(type==='success')iconClass='fas fa-check-circle'; else if(type==='error')iconClass='fas fa-times-circle'; else if(type==='warning')iconClass='fas fa-exclamation-triangle'; toast.innerHTML=`<i class="${iconClass}"></i> ${message}`; toastContainer.appendChild(toast); toast.offsetHeight; setTimeout(()=>{toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; setTimeout(()=>toast.remove(),300);},duration-300);
+            }
+
+            function addNodeToCanvas(name, posX, posY, data = null) {
+                // ... (addNodeToCanvas implementation - minor updates for file nodes, no other changes needed)
+                 if(!nodeDefinitions[name]){showToast(`Nodo "${name}" no definido`,'error'); return null;}
+                 const def=nodeDefinitions[name];
+                 const defDataCopy=JSON.parse(JSON.stringify(def.defaultData||{}));
+                 const nodeData=data?{...defDataCopy,...data}:defDataCopy;
+                 // Ensure all default keys exist if loading partial data
+                 for(const key in def.defaultData) if(nodeData[key]===undefined) nodeData[key]=def.defaultData[key];
+
+                 const nodeId=editor.addNode(name, def.inputs, def.outputs, posX, posY, def.class, nodeData, def.html);
+
+                 // Post-add processing (labels, titles, previews) - slight delay needed for DOM update
+                 setTimeout(()=>{
+                     addLabelsToNode(nodeId,name);
+                     updateNodeTitle(nodeId); // Update title for 'text' node if applicable
+                     const newNode = editor.getNodeFromId(nodeId);
+                     const nodeElement = editor.getNodeElement(nodeId);
+                     if (newNode && nodeElement) {
+                         // Restore previews/filenames for file nodes if data exists (e.g., on paste/load)
+                         if (newNode.name === 'loadImageAndView') {
+                             const previewImg = nodeElement.querySelector('[df-preview-src]');
+                             const filenameDisplay = nodeElement.querySelector('[df-filename]');
+                             if (filenameDisplay) filenameDisplay.textContent = newNode.data.filename || "Ningún archivo seleccionado";
+                             if (previewImg && newNode.data.imageDataUrl) previewImg.src = newNode.data.imageDataUrl;
+                             else if (previewImg) previewImg.src = ""; // Clear if no data URL
+                         } else if (newNode.name === 'loadTextFile') {
+                             const previewText = nodeElement.querySelector('[df-preview-content]');
+                             const filenameDisplay = nodeElement.querySelector('[df-filename]');
+                             if (filenameDisplay) filenameDisplay.textContent = newNode.data.filename || "Ningún archivo seleccionado";
+                             if (previewText && newNode.data.fileContent !== null && newNode.data.fileContent !== undefined) previewText.value = String(newNode.data.fileContent).substring(0, 200) + (String(newNode.data.fileContent).length > 200 ? '...' : '');
+                             else if (previewText) previewText.value = ""; // Clear if no content
+                         } else if (newNode.name === 'displayDataUrlImage') {
+                             const previewImg = nodeElement.querySelector('[df-display-src]');
+                             if (previewImg) previewImg.src = ""; // Always start empty, needs calculation
+                         } else if (newNode.name === 'fetchHtmlStandalone') { // Restore state for fetch node
+                             const urlInput = nodeElement.querySelector('input[df-url]');
+                             const previewArea = nodeElement.querySelector('textarea[df-preview]');
+                             const statusDisplay = nodeElement.querySelector('.fetch-status');
+                             const saveButton = nodeElement.querySelector('.save-html-btn');
+                             if(urlInput) urlInput.value = nodeData.url || "";
+                             if(previewArea) previewArea.value = nodeData.previewContent || "";
+                             if(statusDisplay) statusDisplay.textContent = nodeData.fetchStatus || "";
+                             if(saveButton) saveButton.disabled = !nodeData.previewContent; // Enable save if content exists
+                         }
+                     }
+                 }, 100); // Small delay ensures DOM is ready
+
+                 updateUnsavedChanges(true);
+                 updateToolbarButtonStates();
+                 return nodeId;
+            }
+
+            function addLabelsToNode(nodeId, nodeName) {
+                // ... (AddLabels implementation - no changes needed)
+                const el=editor.getNodeElement(nodeId); if (!el) return;
+                el.querySelectorAll('.connector-label').forEach(l=>l.remove()); // Clear old labels
+                const inputs=el.querySelectorAll('.inputs .input');
+                // Special case for 'add' node (dynamic inputs)
+                if(nodeName==='add'){ inputs.forEach((inputEl,i)=>{const l=document.createElement('div'); l.className='connector-label input-label'; l.textContent=`Num ${i+1}`; inputEl.insertAdjacentElement('afterend',l);});
+                } else if(nodeInputLabels[nodeName]){ // Standard input labels
+                   if(nodeInputLabels[nodeName].length===inputs.length){inputs.forEach((inputEl,i)=>{const l=document.createElement('div'); l.className='connector-label input-label'; l.textContent=nodeInputLabels[nodeName][i]; inputEl.insertAdjacentElement('afterend',l);});}
+                   else { /* console.warn(`Label mismatch inputs ${nodeName} (${nodeId}): expected ${nodeInputLabels[nodeName].length}, got ${inputs.length}`); */ } // Mismatch can happen during add/remove input
+                }
+                const outputs=el.querySelectorAll('.outputs .output');
+                if(nodeOutputLabels[nodeName]){ // Standard output labels
+                   if(nodeOutputLabels[nodeName].length===outputs.length){outputs.forEach((outputEl,i)=>{const l=document.createElement('div'); l.className='connector-label output-label'; l.textContent=nodeOutputLabels[nodeName][i]; outputEl.insertAdjacentElement('afterend',l);});}
+                   else { console.warn(`Label mismatch outputs ${nodeName} (${nodeId}): expected ${nodeOutputLabels[nodeName].length}, got ${outputs.length}`); }
+                }
+            }
+
+            function addLabelsToAllNodes() {
+                // ... (AddLabelsToAllNodes - no changes needed)
+                 const allNodes=editor.export().drawflow.Home.data;
+                 for(const idStr in allNodes){ const node=allNodes[idStr]; addLabelsToNode(node.id,node.name); updateNodeTitle(node.id); }
+            }
+
+            function updateNodeTitle(nodeId) {
+                // ... (Update Title for 'text' node - no changes needed)
+                 const node = editor.getNodeFromId(nodeId); if (!node || node.name !== 'text') return;
+                 const nodeElement = editor.getNodeElement(nodeId); if (!nodeElement) return;
+                 const titleSpan = nodeElement.querySelector('.node-title-text'); if (!titleSpan) return;
+                 const customTitle = node.data.customTitle || ""; titleSpan.textContent = customTitle.trim() !== "" ? customTitle.trim() : "Texto";
+            }
+
+            function formatCustomDate(date, format) {
+                 // ... (Date formatting helper - no changes needed)
+                 if(!(date instanceof Date)||isNaN(date))return "Invalid Date"; const Y=date.getFullYear(),M=date.getMonth()+1,D=date.getDate(),H=date.getHours(),m=date.getMinutes(),s=date.getSeconds(); let f=format; f=f.replace('YYYY',String(Y)); f=f.replace('MM',String(M).padStart(2,'0')); f=f.replace('DD',String(D).padStart(2,'0')); f=f.replace('HH',String(H).padStart(2,'0')); f=f.replace('mm',String(m).padStart(2,'0')); f=f.replace('ss',String(s).padStart(2,'0')); return f;
+            }
+
+             function downloadFile(content, filename, contentType) {
+                 // ... (File download helper - no changes needed)
+                 const blob=new Blob([content],{type:contentType}); const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download=filename; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
+             }
+
+            // --- Calculation Logic ---
+            let calculationInProgress = false;
+            const MAX_CALCULATION_DEPTH = 50;
+            let calculationCache = {}; // Cache results for one calculation cycle
+
+            function getInputValue(targetNodeId, inputName, depth = 0) {
+                 // ... (getInputValue - no changes needed, new node isn't called)
+                 if (depth > MAX_CALCULATION_DEPTH) { console.error(`Max calculation depth reached for node ${targetNodeId}, input ${inputName}. Possible circular dependency.`); return null; }
+                 const cacheKey = `${targetNodeId}-${inputName}`; if (calculationCache.hasOwnProperty(cacheKey)) return calculationCache[cacheKey];
+
+                 const targetNode = editor.getNodeFromId(targetNodeId); if (!targetNode || !targetNode.inputs[inputName]) { calculationCache[cacheKey] = null; return null; } // Input doesn't exist
+                 const connections = targetNode.inputs[inputName].connections; if (!connections || connections.length === 0) { calculationCache[cacheKey] = null; return null; } // No connection
+
+                 const sourceConnection = connections[0]; // Assume single connection per input for simplicity
+                 const sourceNodeId = sourceConnection.node;
+                 const sourceOutputName = sourceConnection.input; // This is confusingly named 'input' in Drawflow export, it means the source output connector name
+
+                 let result = calculateNodeOutput(sourceNodeId, sourceOutputName, depth + 1);
+
+                 // Type coercion for boolean node output
+                 const sourceNode = editor.getNodeFromId(sourceNodeId);
+                 if (sourceNode && sourceNode.name === 'boolean' && typeof result === 'string') { result = (result === 'true'); }
+
+                 calculationCache[cacheKey] = result;
+                 return result;
+            }
+
+            function calculateNodeOutput(nodeId, outputName = 'output_1', depth = 0) {
+                 // ... (calculateNodeOutput - ensure 'fetchHtmlStandalone' is NOT handled here)
+                 if (depth > MAX_CALCULATION_DEPTH) { console.error(`Max calculation depth reached calculating output for node ${nodeId}. Possible circular dependency.`); return null; }
+
+                 const node = editor.getNodeFromId(nodeId); if (!node) return null;
+
+                 // Handle nodes with direct output (no calculation based on inputs)
+                 switch (node.name) {
+                    case 'number': return Number(node.data.value);
+                    case 'text': return String(node.data.value);
+                    case 'boolean': return node.data.value === 'true'; // Return boolean directly
+                    case 'prompt': const dv=getInputValue(nodeId,'input_1',depth+1)??node.data.message??""; return prompt(node.data.message||"Valor:", dv);
+                    case 'getDate': return new Date();
+                    case 'random': return Math.random();
+                    case 'loadImageAndView': return node.data.imageDataUrl; // Output the stored Data URL
+                    case 'loadTextFile': return node.data.fileContent; // Output the stored text content
+                 }
+
+                 // For nodes that depend on inputs:
+                 let result = null;
+                 try {
+                     const def = nodeDefinitions[node.name];
+                     if (!def) { console.warn("Node definition not found for calculation:", node.name); return null; }
+
+                     let numInputsExpected = def.inputs || 0;
+                     // Special case for 'add' node which can have dynamic inputs
+                     if (node.name === 'add') { numInputsExpected = Object.keys(node.inputs).length; }
+
+                     // Get all input values
+                     let v = Array(numInputsExpected).fill(null);
+                     for(let i=0; i<numInputsExpected; i++) { v[i] = getInputValue(nodeId, `input_${i+1}`, depth+1); }
+
+                     // Prepare typed versions (handle null/undefined gracefully)
+                     let n = v.map(val => (val !== null && val !== undefined) ? Number(val) : NaN);
+                     let s = v.map(val => (val === null || val === undefined) ? "" : String(val));
+                     let b = v.map(val => !!val); // Simple truthiness
+
+                     switch (node.name) {
+                         // Math
+                         case 'add': result=0; for(let i=0;i<numInputsExpected;i++){const numVal=n[i]; if(!isNaN(numVal)) result+=numVal;} break;
+                         case 'subtract': result = n[0] - n[1]; break;
+                         case 'multiply': result = n[0] * n[1]; break;
+                         case 'divide': result = (n[1] === 0 || isNaN(n[0]) || isNaN(n[1])) ? NaN : (n[0] / n[1]); break;
+                         case 'power': result = Math.pow(n[0], n[1]); break;
+                         case 'sqrt': result = (n[0] < 0 || isNaN(n[0])) ? NaN : Math.sqrt(n[0]); break;
+                         case 'round': const dec=parseInt(node.data.decimals)||0; const fac=Math.pow(10,dec); result=isNaN(n[0])?NaN:Math.round(n[0]*fac)/fac; break;
+                         case 'abs': result = isNaN(n[0]) ? NaN : Math.abs(n[0]); break;
+                         case 'min': result = Math.min(...n.filter(val => !isNaN(val))); if (!isFinite(result)) result = NaN; break; // Handle multiple inputs better if needed
+                         case 'max': result = Math.max(...n.filter(val => !isNaN(val))); if (!isFinite(result)) result = NaN; break; // Handle multiple inputs better if needed
+                         case 'sin': result = isNaN(n[0]) ? NaN : Math.sin(n[0]); break;
+                         case 'cos': result = isNaN(n[0]) ? NaN : Math.cos(n[0]); break;
+                         case 'tan': result = isNaN(n[0]) ? NaN : Math.tan(n[0]); break;
+                         case 'log': result = (n[0] <= 0 || isNaN(n[0])) ? NaN : Math.log(n[0]); break; // Natural Log (ln)
+
+                         // String
+                         case 'concatenate': result = s[0] + s[1]; break; // Simple 2-input concat
+                         case 'substring': const os=s[0]; let si; let ei; const sti=v[1]; const std=node.data.start; if(sti!==null&&sti!==undefined)si=parseInt(sti,10); else if(std!==null&&std!==undefined&&std!=='')si=parseInt(std,10); else si=0; if(isNaN(si))si=0; const eni=v[2]; const end=node.data.end; if(eni!==null&&eni!==undefined)ei=parseInt(eni,10); else if(end!==null&&end!==undefined&&end!=='')ei=parseInt(end,10); else ei=undefined; if(isNaN(ei))ei=undefined; si=Math.max(0,si); try{result=os.substring(si,ei);}catch(e){console.error(`Substr Err ${nodeId}:`,e); result=os;} break;
+                         case 'uppercase': result = s[0].toUpperCase(); break;
+                         case 'lowercase': result = s[0].toLowerCase(); break;
+                         case 'length': result = (v[0]!==null&&v[0]!==undefined&&typeof v[0].length==='number')?v[0].length:0; break; // Works for strings and arrays
+                         case 'replace': const g=node.data.global==='true'; try{const esc=s[1].replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); result=s[0].replace(new RegExp(esc,g?'g':''),s[2]);}catch(e){result=s[0];console.warn(`Replace Err ${nodeId}`,e);} break;
+                         case 'trim': result = s[0].trim(); break;
+                         case 'split': result = s[0].split(s[1]); break;
+
+                         // Logic
+                         case 'if': result = b[0] ? v[1] : v[2]; break;
+                         case 'ternary': result = b[0] ? v[1] : v[2]; break; // Same as 'if'
+                         case 'compare': const op=node.data.operator||'eq'; if(op==='eq')result=v[0]==v[1]; else if(op==='seq')result=v[0]===v[1]; else if(op==='neq')result=v[0]!=v[1]; else if(op==='sneq')result=v[0]!==v[1]; else if(op==='gt')result=v[0]>v[1]; else if(op==='lt')result=v[0]<v[1]; else if(op==='gte')result=v[0]>=v[1]; else if(op==='lte')result=v[0]<=v[1]; else result=false; break;
+                         case 'and': result = b[0] && b[1]; break;
+                         case 'or': result = b[0] || b[1]; break;
+                         case 'not': result = !b[0]; break;
+
+                         // Data/Type
+                         case 'getType': result = (v[0]===null)?'null':typeof v[0]; break; // Returns string like 'string', 'number', 'object'
+                         case 'toNumber': result = n[0]; break; // Already converted to number or NaN
+                         case 'toString': result = s[0]; break; // Already converted to string
+                         case 'parseJson': try{result=s[0]?JSON.parse(s[0]):null;}catch(e){result={error:`JSON Parse Error: ${e.message}`};} break;
+                         case 'stringifyJson': try{result=JSON.stringify(v[0],null,node.data.pretty==='true'?2:0);}catch(e){result=`{"error":"JSON Stringify Error: ${e.message}"}`;} break;
+                         case 'createArray': const arr=[]; const createArrNIn = nodeDefinitions['createArray'].inputs; for(let i=0; i<createArrNIn; i++) if(node.inputs[`input_${i+1}`]?.connections.length > 0) arr.push(v[i]); result=arr; break; // Only include connected inputs
+
+                         // Date/Time
+                         case 'formatDate': const fmt=s[1]||node.data.format||'YYYY-MM-DD HH:mm:ss'; if(v[0] instanceof Date&&!isNaN(v[0]))result=formatCustomDate(v[0],fmt); else result="Invalid Date Input"; break;
+
+                         // Utility/Output (that have outputs)
+                         case 'delay': result = v[0]; break; // Just passes through (delay itself isn't implemented async here)
+                         case 'displayAndPass': result = v[0]; break; // Passes the value through
+
+                         // HTML Media Nodes (Outputting HTML text)
+                         case 'image': const imgSrc = node.data.src?.trim() || ""; if (!imgSrc) { result = "<!-- URL de imagen requerida -->"; break; } const imgAlt = node.data.alt?.trim() || ""; const imgWidth = node.data.width?.trim() || ""; const imgHeight = node.data.height?.trim() || ""; let imgTag = `<img src="${imgSrc}"`; if (imgAlt) imgTag += ` alt="${imgAlt}"`; if (imgWidth) imgTag += ` width="${imgWidth}"`; if (imgHeight) imgTag += ` height="${imgHeight}"`; imgTag += `>`; result = imgTag; break;
+                         case 'video': const vidSrc = node.data.src?.trim() || ""; if (!vidSrc) { result = "<!-- URL de video requerida -->"; break; } const vidWidth = node.data.width?.trim() || ""; const vidHeight = node.data.height?.trim() || ""; const vidControls = node.data.controls === "true"; const vidAutoplay = node.data.autoplay === "true"; const vidMuted = node.data.muted === "true"; const vidLoop = node.data.loop === "true"; let vidTag = `<video`; if (vidWidth) vidTag += ` width="${vidWidth}"`; if (vidHeight) vidTag += ` height="${vidHeight}"`; if (vidControls) vidTag += ` controls`; if (vidAutoplay) vidTag += ` autoplay`; if (vidMuted) vidTag += ` muted`; if (vidLoop) vidTag += ` loop`; vidTag += `>\n  <source src="${vidSrc}" type="video/mp4"> {/* Asume MP4 */}\n  Navegador no soporta video.\n</video>`; result = vidTag; break;
+
+                         // Data URL Display Node
+                         case 'displayDataUrlImage': result = v[0]; break; // Just passes the Data URL through
+
+                         // Nodes with no output value or handled earlier
+                         case 'display':
+                         case 'saveFile':
+                         case 'note':
+                         case 'consoleLog':
+                         case 'fetchHtmlStandalone': // Explicitly ignore this node in calculations
+                            result = null;
+                            break;
+
+                         default:
+                            console.warn("Node type not handled in calculation:", node.name);
+                            result = null;
+                     }
+                 } catch (error) {
+                     console.error(`Error calculating node ${nodeId} (${node.name}):`, error);
+                     showToast(`Error en cálculo ${node.name} (${nodeId})`, 'error');
+                     result = null; // Return null on error
+                 }
+
+                 return result;
+            }
+
+            // --- Update Specific Node Displays ---
+            function updateDisplayNode(id) {
+                 // ... (updateDisplayNode - no changes needed)
+                 const n=editor.getNodeFromId(id); if(!n||n.name!=='display')return; calculationCache={}; const iVal=getInputValue(id,'input_1'); let dVal='---'; if(iVal===null)dVal='null'; else if(iVal===undefined)dVal='undefined'; else if(typeof iVal==='boolean')dVal=String(iVal); else if(typeof iVal==='number'&&isNaN(iVal))dVal="NaN"; else if(typeof iVal==='number'&&!isFinite(iVal))dVal=String(iVal); else if(iVal instanceof Date&&!isNaN(iVal))dVal=iVal.toISOString(); else if(Array.isArray(iVal)){try{dVal=JSON.stringify(iVal,null,2);}catch(e){dVal="[Error al mostrar Array]";}} else if(typeof iVal==='object'&&iVal!==null){try{dVal=JSON.stringify(iVal,null,2);}catch(e){dVal="{Error al mostrar Objeto}";}} else{dVal=String(iVal);} editor.updateNodeDataFromId(id,{result:dVal});
+            }
+
+            function updateDisplayAndPassNode(id) {
+                 // ... (updateDisplayAndPassNode - no changes needed)
+                 const n=editor.getNodeFromId(id); if(!n||n.name!=='displayAndPass')return; const iVal=getInputValue(id,'input_1'); let dVal='---'; if(iVal===null)dVal='null'; else if(iVal===undefined)dVal='undefined'; else if(typeof iVal==='boolean')dVal=String(iVal); else if(typeof iVal==='number'&&isNaN(iVal))dVal="NaN"; else if(typeof iVal==='number'&&!isFinite(iVal))dVal=String(iVal); else if(iVal instanceof Date&&!isNaN(iVal))dVal=iVal.toISOString(); else if(Array.isArray(iVal)){try{dVal=JSON.stringify(iVal,null,2);}catch(e){dVal="[Error al mostrar Array]";}} else if(typeof iVal==='object'&&iVal!==null){try{dVal=JSON.stringify(iVal,null,2);}catch(e){dVal="{Error al mostrar Objeto}";}} else{dVal=String(iVal);} editor.updateNodeDataFromId(id,{result:dVal});
+            }
+
+            function updateSaveFileNodeDisplay(id) {
+                 // ... (updateSaveFileNodeDisplay - no changes needed)
+                 const n=editor.getNodeFromId(id); if(!n||n.name!=='saveFile')return; calculationCache={}; const iVal=getInputValue(id,'input_1'); let dVal='---'; if(iVal!==null&&iVal!==undefined){try{if(typeof iVal==='object')dVal=JSON.stringify(iVal);else dVal=String(iVal);}catch(e){dVal="{Error al mostrar Objeto}";}} else if(iVal===null)dVal='null'; const maxL=100; let sVal=dVal; if(sVal.length>maxL)sVal=sVal.substring(0,maxL)+"..."; editor.updateNodeDataFromId(id,{currentvalue:sVal});
+            }
+
+            function updateDisplayDataUrlImageNode(id) {
+                 // ... (updateDisplayDataUrlImageNode - no changes needed)
+                 const node = editor.getNodeFromId(id); if (!node || node.name !== 'displayDataUrlImage') return;
+                 const nodeElement = editor.getNodeElement(id); if (!nodeElement) return;
+                 const dataUrlInput = getInputValue(id, 'input_1'); // Get calculated input
+                 const displayImg = nodeElement.querySelector('[df-display-src]');
+                 // console.log(`[Node ${id} - displayDataUrlImage] updateDisplay. Input received:`, typeof dataUrlInput, dataUrlInput ? dataUrlInput.substring(0, 60) + '...' : dataUrlInput);
+                 if (displayImg) {
+                     if (typeof dataUrlInput === 'string' && dataUrlInput.startsWith('data:image/')) {
+                         displayImg.src = dataUrlInput;
+                         displayImg.style.display = 'block'; // Make sure it's visible
+                     } else {
+                         displayImg.src = ""; // Clear if input is not a valid data URL
+                     }
+                 }
+            }
+
+            // --- Main Calculation Trigger ---
+            function runAllCalculations() {
+                if (calculationInProgress) return; // Prevent re-entrancy
+                calculationInProgress = true;
+                calculationCache = {}; // Clear cache for this run
+                console.log("Recalculando flujo...");
+                statusInfo.textContent = "Calculando...";
+
+                try {
+                    const nodes = editor.export()?.drawflow?.Home?.data;
+                    if (!nodes) { calculationInProgress = false; return; }
+
+                    // Iterate through nodes that need their internal display updated based on calculations
+                    for (const idStr in nodes) {
+                        const node = nodes[idStr];
+                        switch (node.name) {
+                            case 'display':
+                                updateDisplayNode(node.id);
+                                break;
+                            case 'displayAndPass':
+                                updateDisplayAndPassNode(node.id);
+                                break;
+                            case 'saveFile':
+                                updateSaveFileNodeDisplay(node.id);
+                                break;
+                            case 'displayDataUrlImage':
+                                updateDisplayDataUrlImageNode(node.id);
+                                break;
+                            // Add other nodes requiring display updates based on calculation here
+                            // Note: fetchHtmlStandalone is NOT updated here.
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error durante el recálculo general:", error);
+                    showToast("Error durante recálculo", "error");
+                    statusInfo.textContent = "Error de cálculo.";
+                } finally {
+                    calculationInProgress = false;
+                    // Update status after a short delay unless another change is detected
+                    setTimeout(() => { if (statusInfo.textContent === "Calculando...") statusInfo.textContent = "Listo"; }, 500);
+                }
+            }
+
+            // --- Event Listeners & Handlers ---
+            let debounceTimer = null;
+            const DEBOUNCE_DELAY = 300;
+            function debouncedRecalculate() {
+                clearTimeout(debounceTimer);
+                statusInfo.textContent = "Cambios detectados...";
+                debounceTimer = setTimeout(runAllCalculations, DEBOUNCE_DELAY);
+            }
+
+            // Drawflow Events
+            editor.on('nodeDataChanged', id => {
+                updateUnsavedChanges(true);
+                debouncedRecalculate();
+                updateToolbarButtonStates();
+                const node = editor.getNodeFromId(id);
+                if (node) {
+                    // Update specific displays that depend directly on data (not calculation)
+                    if (node.name === 'saveFile') updateSaveFileNodeDisplay(id); // Reflect filename changes
+                    else if (node.name === 'text') updateNodeTitle(id);          // Reflect custom title changes
+                    // No need to call updates for loadImageAndView/loadTextFile here, done in 'change' listener
+                }
+            });
+            editor.on('connectionCreated', c => { updateUnsavedChanges(true); debouncedRecalculate(); updateToolbarButtonStates(); });
+            editor.on('connectionRemoved', c => { updateUnsavedChanges(true); debouncedRecalculate(); updateToolbarButtonStates(); });
+            editor.on('nodeRemoved', id => { if (selectedNodeId === id) { selectedNodeId = null; } updateUnsavedChanges(true); setTimeout(runAllCalculations, 50); updateToolbarButtonStates(); }); // Recalculate slightly delayed
+            editor.on('nodeSelected', id => { selectedNodeId = id; updateToolbarButtonStates(); });
+            editor.on('nodeUnselected', () => { setTimeout(() => { if (!editor.selected_nodes || editor.selected_nodes.length === 0) { selectedNodeId = null; updateToolbarButtonStates(); } }, 50); }); // Delay to handle multi-select?
+            editor.on('nodeMoved', id => updateUnsavedChanges(true));
+            editor.on('zoom', zoom => zoomLevelDisplay.textContent = `${Math.round(zoom * 100)}%`);
+            editor.on('translate', pos => coordinatesDisplay.textContent = `X: ${Math.round(editor.canvas_x)}, Y: ${Math.round(editor.canvas_y)}`);
+            editor.on('import', data => { // Called AFTER import is done
+                updateUnsavedChanges(false);
+                selectedNodeId = null;
+                setTimeout(() => { // Delay slightly to ensure DOM is fully updated by Drawflow
+                     addLabelsToAllNodes(); // Add labels to newly imported nodes
+                     // Restore previews for file/image nodes from imported data
+                     const allNodes = editor.export().drawflow.Home.data;
+                     for (const idStr in allNodes) {
+                        const node = allNodes[idStr];
+                        const nodeElement = editor.getNodeElement(node.id);
+                        if(!nodeElement) continue; // Skip if element not found (shouldn't happen)
+
+                        if (node.name === 'loadImageAndView') {
+                            const previewImg = nodeElement.querySelector('[df-preview-src]');
+                            const filenameDisplay = nodeElement.querySelector('[df-filename]');
+                            if (filenameDisplay) filenameDisplay.textContent = node.data.filename || "Ningún archivo seleccionado";
+                            if (previewImg && node.data.imageDataUrl) previewImg.src = node.data.imageDataUrl; else if (previewImg) previewImg.src = "";
+                        } else if (node.name === 'loadTextFile') {
+                            const previewText = nodeElement.querySelector('[df-preview-content]');
+                            const filenameDisplay = nodeElement.querySelector('[df-filename]');
+                            if (filenameDisplay) filenameDisplay.textContent = node.data.filename || "Ningún archivo seleccionado";
+                            if (previewText && node.data.fileContent !== null && node.data.fileContent !== undefined) previewText.value = String(node.data.fileContent).substring(0, 200) + (String(node.data.fileContent).length > 200 ? '...' : ''); else if (previewText) previewText.value = "";
+                        } else if (node.name === 'displayDataUrlImage') {
+                             const previewImg = nodeElement.querySelector('[df-display-src]');
+                             if (previewImg) previewImg.src = ""; // Needs calculation
+                        } else if (node.name === 'fetchHtmlStandalone') { // Restore fetch node state
+                             const urlInput = nodeElement.querySelector('input[df-url]');
+                             const previewArea = nodeElement.querySelector('textarea[df-preview]');
+                             const statusDisplay = nodeElement.querySelector('.fetch-status');
+                             const saveButton = nodeElement.querySelector('.save-html-btn');
+                             if(urlInput) urlInput.value = node.data.url || "";
+                             if(previewArea) previewArea.value = node.data.previewContent || "";
+                             if(statusDisplay) statusDisplay.textContent = node.data.fetchStatus || "";
+                             if(saveButton) saveButton.disabled = !node.data.previewContent;
+                        }
+                     }
+                     runAllCalculations(); // Run calculations after import and potential preview restoration
+                     editor.zoom_reset();
+                     updateToolbarButtonStates();
+                     showToast("Flujo importado", "success");
+                     statusInfo.textContent = "Flujo importado.";
+                 }, 300); // Increased delay for robustness
+            });
+            editor.on('clear', () => { updateUnsavedChanges(false); selectedNodeId = null; updateToolbarButtonStates(); statusInfo.textContent = "Lienzo limpio."; });
+            editor.on('addReroute', id => updateUnsavedChanges(true) );
+            editor.on('removeReroute', id => updateUnsavedChanges(true) );
+            editor.on('historyChange', () => updateToolbarButtonStates() ); // Update undo/redo buttons
+
+            // General Container Mousemove (for paste position)
+            container.addEventListener('mousemove', e => { lastMousePosition.x = e.clientX; lastMousePosition.y = e.clientY; });
+
+            // --- Container CLICK Listener (Handles Button Clicks INSIDE Nodes) ---
+            container.addEventListener('click', async function(event) { // **** Added async ****
+
+                 // 1. Add Input Button ('add' node)
+                 if (event.target.classList.contains('add-input-btn') || event.target.closest('.add-input-btn')) {
+                     const nodeElement = event.target.closest('.drawflow-node'); if (!nodeElement) return;
+                     const nodeId = nodeElement.id.replace('node-', '');
+                     const node = editor.getNodeFromId(nodeId);
+                     if (node && node.name === 'add') {
+                         const currentInputCount = Object.keys(node.inputs).length;
+                         if (currentInputCount >= MAX_ADD_INPUTS) { showToast(`Máximo de ${MAX_ADD_INPUTS} entradas alcanzado.`, 'warning'); return; }
+                         editor.addNodeInput(nodeId);
+                         setTimeout(() => { addLabelsToNode(nodeId, 'add'); editor.updateConnectionNodes('node-' + nodeId); debouncedRecalculate(); updateUnsavedChanges(true); }, 50);
+                     }
+                     return; // Processed this button type
+                 }
+
+                 // 2. Save Button ('saveFile' node)
+                 if (event.target.classList.contains('save-button') || event.target.closest('.save-button')) {
+                     const nodeElement = event.target.closest('.drawflow-node'); if (!nodeElement) return;
+                     const nodeId = parseInt(nodeElement.id.replace('node-', ''), 10); if (isNaN(nodeId)) return;
+                     const nodeData = editor.getNodeFromId(nodeId); if (!nodeData || nodeData.name !== 'saveFile') return;
+                     calculationCache = {}; // Ensure fresh calculation
+                     const valueToSave = getInputValue(nodeId, 'input_1');
+                     let valueString = "";
+                     if (valueToSave === null) valueString = "null";
+                     else if (valueToSave === undefined) valueString = "undefined";
+                     else if (typeof valueToSave === 'object') { try { valueString = JSON.stringify(valueToSave, null, 2); } catch (e) { valueString = `{ "error": "Could not stringify object" }`; } }
+                     else valueString = String(valueToSave);
+                     let filename = nodeData.data.filename || 'output.txt';
+                     // Ensure .txt extension, handle existing extensions
+                     if (!filename.toLowerCase().endsWith('.txt')) { const dotIndex = filename.lastIndexOf('.'); filename = (dotIndex > 0 ? filename.substring(0, dotIndex) : filename) + '.txt'; }
+                     showToast(`Guardando valor en ${filename}...`, 'info');
+                     downloadFile(valueString, filename, 'text/plain;charset=utf-8');
+                     return; // Processed this button type
+                 }
+
+                 // 3. Select All Button ('displayAndPass' node)
+                 if (event.target.classList.contains('select-all-btn') || event.target.closest('.select-all-btn')) {
+                    const nodeElement = event.target.closest('.drawflow-node'); if (!nodeElement) return;
+                    const boxElement = nodeElement.querySelector('.box'); if (!boxElement) return;
+                    const textarea = boxElement.querySelector('textarea[df-result]');
+                    if (textarea) {
+                        try { textarea.focus(); textarea.select(); showToast('Contenido seleccionado', 'info', 2000); }
+                        catch (err) { console.error("Error al seleccionar texto:", err); showToast('No se pudo seleccionar el texto', 'error'); }
+                    }
+                    event.stopPropagation(); // Prevent other actions
+                    return; // Processed this button type
+                 }
+
+                 // 4. **** NEW: Fetch HTML Button ('fetchHtmlStandalone' node) ****
+                 if (event.target.classList.contains('fetch-html-btn') || event.target.closest('.fetch-html-btn')) {
+                    const nodeElement = event.target.closest('.drawflow-node'); if (!nodeElement) return;
+                    const nodeId = nodeElement.id.replace('node-', '');
+                    const node = editor.getNodeFromId(nodeId);
+                    if (node && node.name === 'fetchHtmlStandalone') {
+                        const urlInput = nodeElement.querySelector('input[df-url]');
+                        const previewArea = nodeElement.querySelector('textarea[df-preview]');
+                        const statusDisplay = nodeElement.querySelector('.fetch-status');
+                        const fetchButton = nodeElement.querySelector('.fetch-html-btn');
+                        const saveButton = nodeElement.querySelector('.save-html-btn');
+                        if (!urlInput || !previewArea || !statusDisplay || !fetchButton || !saveButton) { console.error("Error: Elementos internos no encontrados en fetchHtmlStandalone", nodeId); showToast("Error interno del nodo", "error"); return; }
+
+                        const urlToFetch = urlInput.value.trim();
+                        if (!urlToFetch || (!urlToFetch.startsWith('http://') && !urlToFetch.startsWith('https://'))) {
+                            statusDisplay.textContent = "Error: URL inválida."; statusDisplay.style.color = 'red'; previewArea.value = "";
+                            editor.updateNodeDataFromId(nodeId, { url: urlToFetch, previewContent: "", fetchStatus: statusDisplay.textContent });
+                            showToast("Introduce una URL válida (http:// o https://)", "warning"); return;
+                        }
+
+                        // --- Start Fetching ---
+                        statusDisplay.textContent = "Obteniendo..."; statusDisplay.style.color = '#555';
+                        fetchButton.disabled = true; fetchButton.style.cursor = 'wait'; fetchButton.style.opacity = '0.7';
+                        saveButton.disabled = true; // Disable save while fetching
+                        previewArea.value = "";
+                        editor.updateNodeDataFromId(nodeId, { url: urlToFetch, previewContent: "", fetchStatus: "Obteniendo..." });
+
+                        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(urlToFetch)}`;
+
+                        try {
+                            const response = await fetch(proxyUrl);
+                            if (!response.ok) {
+                                let errorText = `Error: ${response.status} ${response.statusText}`;
+                                try { const errorData = await response.json(); if (errorData && errorData.contents && typeof errorData.contents === 'string' && errorData.contents.includes('error')) { errorText = `Error Proxy: ${errorData.contents.substring(0,100)}...`; } else if (errorData && errorData.error) { errorText = `Error Proxy: ${errorData.error}`; } } catch (jsonError) { /* Ignore */ }
+                                throw new Error(errorText);
+                            }
+                            const htmlContent = await response.text();
+                            const sizeKB = (htmlContent.length / 1024).toFixed(1);
+                            previewArea.value = htmlContent;
+                            statusDisplay.textContent = `Éxito (${sizeKB} KB)`; statusDisplay.style.color = 'green';
+                            editor.updateNodeDataFromId(nodeId, { url: urlToFetch, previewContent: htmlContent, fetchStatus: statusDisplay.textContent });
+                            showToast(`HTML obtenido (${sizeKB} KB)`, 'success', 3000);
+                            saveButton.disabled = false; // Enable save
+                        } catch (error) {
+                            console.error(`[Node ${nodeId}] Error fetching HTML:`, error);
+                            statusDisplay.textContent = `Error: ${error.message || 'Fallo al obtener'}`; statusDisplay.style.color = 'red';
+                            previewArea.value = `// Error al obtener:\n// ${urlToFetch}\n\n// ${error.message}`;
+                            editor.updateNodeDataFromId(nodeId, { url: urlToFetch, previewContent: "", fetchStatus: statusDisplay.textContent });
+                            showToast(`Error al obtener HTML: ${error.message}`, 'error');
+                            saveButton.disabled = true; // Keep save disabled
+                        } finally {
+                            fetchButton.disabled = false; fetchButton.style.cursor = 'pointer'; fetchButton.style.opacity = '1';
+                        }
+                    }
+                    return; // Processed this button type
+                 }
+                 // ***********************************************************
+
+                 // 5. **** NEW: Save HTML Button ('fetchHtmlStandalone' node) ****
+                 if (event.target.classList.contains('save-html-btn') || event.target.closest('.save-html-btn')) {
+                    const nodeElement = event.target.closest('.drawflow-node'); if (!nodeElement) return;
+                    const nodeId = nodeElement.id.replace('node-', '');
+                    const node = editor.getNodeFromId(nodeId);
+                    if (node && node.name === 'fetchHtmlStandalone') {
+                        const previewArea = nodeElement.querySelector('textarea[df-preview]');
+                        const urlInput = nodeElement.querySelector('input[df-url]');
+                        if (!previewArea) { console.error("Error: Textarea no encontrada en fetchHtmlStandalone", nodeId); showToast("Error interno al guardar", "error"); return; }
+
+                        const contentToSave = previewArea.value;
+                        if (contentToSave === null || contentToSave === undefined || contentToSave.trim() === "" || contentToSave.startsWith("// Error al obtener")) { showToast("No hay contenido válido para guardar.", "warning"); return; }
+
+                        let filename = "fetched_content.txt";
+                        try { if(urlInput && urlInput.value){ const urlObj = new URL(urlInput.value); let namePart = urlObj.pathname.split('/').pop() || urlObj.hostname; if(namePart.includes('.')) namePart = namePart.substring(0, namePart.lastIndexOf('.')); namePart = namePart.replace(/[^a-z0-9_\-]/gi, '_').substring(0, 30); if(namePart && namePart !== '_') filename = `${namePart}_content.txt`; } } catch(e) { /* Use default */}
+                        showToast(`Guardando como ${filename}...`, 'info');
+                        downloadFile(contentToSave, filename, 'text/plain;charset=utf-8');
+                    }
+                    return; // Processed this button type
+                 }
+                 // ***********************************************************
+
+                 // 6. File Input Trigger Buttons (loadImageAndView, loadTextFile)
+                 if (event.target.classList.contains('node-file-input-button')) {
+                     const nodeElement = event.target.closest('.drawflow-node'); if (!nodeElement) return;
+                     const fileInput = nodeElement.querySelector('.hidden-file-input');
+                     if (fileInput) {
+                         fileInput.click(); // Trigger the hidden file input
+                         // No return here, clicking the button itself doesn't finish the action
+                     }
+                 }
+
+            }); // --- End CLICK Listener ---
+
+            // --- Container CHANGE Listener (Handles Hidden File Input Changes) ---
+            container.addEventListener('change', function(event) {
+                if (event.target.classList.contains('hidden-file-input')) {
+                    const nodeElement = event.target.closest('.drawflow-node'); if (!nodeElement) return;
+                    const nodeId = nodeElement.id.replace('node-', '');
+                    const node = editor.getNodeFromId(nodeId);
+                    const file = event.target.files[0];
+
+                    if (!file) { // No file selected or selection cancelled
+                         // Optionally reset display if needed, but often better to leave previous state
+                         // const filenameDisplay = nodeElement.querySelector('[df-filename]');
+                         // if (filenameDisplay && node?.data?.filename === "Ningún archivo seleccionado") filenameDisplay.textContent = "Ningún archivo seleccionado";
+                         return;
+                    }
+
+                    const filenameDisplay = nodeElement.querySelector('[df-filename]');
+                    if (filenameDisplay) filenameDisplay.textContent = file.name;
+
+                    const reader = new FileReader();
+
+                    if (node && node.name === 'loadImageAndView') {
+                        const previewImg = nodeElement.querySelector('[df-preview-src]');
+                        reader.onload = (e) => {
+                            const dataUrl = e.target.result;
+                            if (previewImg) previewImg.src = dataUrl;
+                            editor.updateNodeDataFromId(nodeId, { imageDataUrl: dataUrl, filename: file.name });
+                            // Note: Calculation needs to run AFTER data is updated
+                            setTimeout(debouncedRecalculate, 50); // Trigger recalc slightly delayed
+                        };
+                        reader.onerror = (e) => { console.error("Error FileReader Imagen:", e); showToast("Error al leer la imagen", "error"); if (previewImg) previewImg.src = ""; if (filenameDisplay) filenameDisplay.textContent = "Error de lectura"; editor.updateNodeDataFromId(nodeId, { imageDataUrl: null, filename: "Error" }); setTimeout(debouncedRecalculate, 50); };
+                        reader.readAsDataURL(file);
+                    } else if (node && node.name === 'loadTextFile') {
+                        const previewText = nodeElement.querySelector('[df-preview-content]');
+                        reader.onload = (e) => {
+                            const textContent = e.target.result;
+                            if (previewText) previewText.value = textContent.substring(0, 200) + (textContent.length > 200 ? '...' : '');
+                            editor.updateNodeDataFromId(nodeId, { fileContent: textContent, filename: file.name });
+                             setTimeout(debouncedRecalculate, 50); // Trigger recalc
+                        };
+                        reader.onerror = (e) => { console.error("Error FileReader Texto:", e); showToast("Error al leer el archivo de texto", "error"); if (previewText) previewText.value = "Error de lectura."; if (filenameDisplay) filenameDisplay.textContent = "Error de lectura"; editor.updateNodeDataFromId(nodeId, { fileContent: null, filename: "Error" }); setTimeout(debouncedRecalculate, 50); };
+                        reader.readAsText(file);
+                    }
+                    event.target.value = null; // Reset file input to allow selecting the same file again
+                }
+            }); // --- End CHANGE Listener ---
+
+
+            // --- Toolbar, Sidebar, Modals, Drag/Drop, Context Menu, Keyboard Shortcuts, Save/Load --- (No changes needed in this section)
+             function updateUnsavedChanges(state) { if (hasUnsavedChanges !== state) { hasUnsavedChanges = state; document.title = hasUnsavedChanges ? "Editor Drawflow *":"Editor Drawflow - Multimedia y Archivos"; } }
+             function updateToolbarButtonStates() { const h=editor.history||{list_undo:[],list_redo:[]}; undoBtn.disabled=!(h.list_undo&&h.list_undo.length>0); redoBtn.disabled=!(h.list_redo&&h.list_redo.length>0); copyBtn.disabled=selectedNodeId===null; deleteBtn.disabled=selectedNodeId===null; pasteBtn.disabled=clipboardNodeData===null; }
+             function openModal(id) { document.getElementById(id)?.classList.add('active'); }
+             function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+             document.querySelectorAll('.modal-close, .modal-footer button:not(.primary)').forEach(el=>el.addEventListener('click',()=>closeModal(el.closest('.modal-overlay').id)));
+             newFlowBtn.addEventListener('click', () => { if (hasUnsavedChanges) openModal('newFlowModal'); else editor.clear(); });
+             confirmNewFlowBtn.addEventListener('click', () => { closeModal('newFlowModal'); editor.clear(); });
+             flowNameInput.addEventListener('input', () => savePreviewName.textContent = (flowNameInput.value||'mi-flujo')+'.drawflow');
+             saveFlowBtn.addEventListener('click', () => { const defaultName = `flujo-${new Date().toISOString().slice(0,10).replace(/-/g,'')}`; flowNameInput.value= defaultName; savePreviewName.textContent=defaultName+'.drawflow'; openModal('saveFlowModal'); });
+             confirmSaveFlowBtn.addEventListener('click', () => { const base=flowNameInput.value.trim()||'flujo_export'; const fname=base.replace(/[^a-z0-9_\-]/gi,'_')+'.drawflow'; downloadFile(JSON.stringify(editor.export(),null,2), fname, 'application/json'); closeModal('saveFlowModal'); updateUnsavedChanges(false); showToast('Guardado: '+fname, 'success'); statusInfo.textContent = `Guardado: ${fname}`; });
+             importFlowInput.addEventListener('change', e => { const f=e.target.files[0]; if(!f)return; fileToImport=f; if(hasUnsavedChanges)openModal('confirmImportModal'); else proceedWithImport(); importFlowInput.value=''; });
+             confirmImportActionBtn.addEventListener('click', () => { closeModal('confirmImportModal'); proceedWithImport(); });
+             function proceedWithImport() { if(!fileToImport)return; statusInfo.textContent="Importando..."; const r=new FileReader(); r.onload=e=>{ try{ const d=JSON.parse(e.target.result); if(d?.drawflow?.Home?.data) editor.import(d); else throw new Error("Formato de archivo inválido"); } catch(err){ console.error("Import Error:",err); showToast(`Error importación: ${err.message}`,'error'); statusInfo.textContent="Error importación."; } finally { fileToImport=null; } }; r.onerror=err=>{ console.error("Read Error:",err); showToast(`Error leyendo archivo`, 'error'); statusInfo.textContent="Error lectura."; fileToImport=null; }; r.readAsText(fileToImport); }
+             undoBtn.addEventListener('click',()=>editor.undo()); redoBtn.addEventListener('click',()=>editor.redo()); deleteBtn.addEventListener('click', deleteSelectedNode); copyBtn.addEventListener('click', copySelectedNode); pasteBtn.addEventListener('click', pasteNode);
+             zoomInBtn.addEventListener('click',()=>editor.zoom_in()); zoomOutBtn.addEventListener('click',()=>editor.zoom_out()); zoomResetBtn.addEventListener('click',()=>editor.zoom_reset());
+             helpBtn.addEventListener('click',()=>helpPanel.classList.toggle('show')); closeHelpBtn.addEventListener('click',()=>helpPanel.classList.remove('show'));
+             clearConsoleBtn.addEventListener('click',()=> { console.clear(); showToast('Consola limpiada', 'info'); }); recalculateBtn.addEventListener('click', runAllCalculations);
+             sidebarToggle.addEventListener('click',()=>{ sidebar.classList.toggle('collapsed'); sidebarToggle.querySelector('i').className=sidebar.classList.contains('collapsed')?'fas fa-chevron-right':'fas fa-chevron-left'; setTimeout(()=>editor.updateConnectionNodes(),310); }); // Update connections after sidebar transition
+             document.querySelectorAll('.category-header').forEach(h=>h.addEventListener('click',()=>{ if(!sidebar.classList.contains('collapsed')){ const cat=h.parentElement; const i=h.querySelector('.fa-chevron-down, .fa-chevron-up'); const isOpen=cat.classList.contains('open'); cat.classList.toggle('open',!isOpen); i.className=isOpen?'fas fa-chevron-down':'fas fa-chevron-up'; }}));
+             nodeSearch.addEventListener('input',e=>{ const term=e.target.value.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,""); document.querySelectorAll('.category').forEach(cat=>{ let categoryVisible=false; cat.querySelectorAll('.node-button').forEach(b=>{ const btnText=b.textContent.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,""); const match=btnText.includes(term); b.style.display=match?'flex':'none'; if(match) categoryVisible=true; }); }); }); // Basic filter, doesn't hide categories yet
+             let isDraggingNode = false; document.querySelectorAll('.node-button').forEach(b=>{ b.addEventListener('dragstart',e=>{ if(e.dataTransfer){ const type=e.target.closest('.node-button').dataset.nodeType; e.dataTransfer.setData('nodetype',type); e.dataTransfer.effectAllowed='copy'; isDraggingNode=true; }}); b.addEventListener('dragend',()=>{isDraggingNode=false;}); }); container.addEventListener('dragover',e=>{ e.preventDefault(); e.dataTransfer.dropEffect=isDraggingNode?'copy':'none'; });
+             container.addEventListener('drop',e=>{ e.preventDefault(); if(isDraggingNode&&e.dataTransfer){ const type=e.dataTransfer.getData('nodetype'); if(nodeDefinitions[type]){ const rect=container.getBoundingClientRect(); const dropX=e.clientX-rect.left; const dropY=e.clientY-rect.top; const canvasX=(dropX-editor.canvas_x)/editor.zoom; const canvasY=(dropY-editor.canvas_y)/editor.zoom; addNodeToCanvas(type, canvasX, canvasY); } } isDraggingNode=false; });
+             container.addEventListener('contextmenu', e=>{ e.preventDefault(); currentContextMenuTarget=e.target.closest('.drawflow-node'); const isNode=!!currentContextMenuTarget; const nodeId=isNode?currentContextMenuTarget.id.replace('node-',''):null; contextMenu.querySelector('#ctxCopy').style.display=isNode?'flex':'none'; contextMenu.querySelector('#ctxDelete').style.display=isNode?'flex':'none'; contextMenu.querySelector('#ctxPaste').style.display=clipboardNodeData?'flex':'none'; contextMenu.querySelector('#ctxRecalculate').style.display=isNode?'flex':'none'; const posX=e.clientX; const posY=e.clientY; contextMenu.style.left=`${posX}px`; contextMenu.style.top=`${posY}px`; contextMenu.classList.add('show'); contextMenu.dataset.nodeId=isNode?nodeId:null; });
+             document.addEventListener('click', e=>{ if(!contextMenu.contains(e.target)){ contextMenu.classList.remove('show'); contextMenu.dataset.nodeId=null; } });
+             contextMenu.querySelector('#ctxCopy').addEventListener('click',()=>{const id=contextMenu.dataset.nodeId; if(id){selectedNodeId=id; copySelectedNode();} contextMenu.classList.remove('show'); });
+             contextMenu.querySelector('#ctxPaste').addEventListener('click',()=>{pasteNode(); contextMenu.classList.remove('show'); });
+             contextMenu.querySelector('#ctxDelete').addEventListener('click',()=>{const id=contextMenu.dataset.nodeId; if(id){selectedNodeId=id; deleteSelectedNode();} contextMenu.classList.remove('show'); });
+             contextMenu.querySelector('#ctxRecalculate').addEventListener('click',()=>{const id=contextMenu.dataset.nodeId; if(id){ console.log(`Recalculando nodo ${id} desde menú...`); statusInfo.textContent=`Recalculando nodo ${id}...`; runAllCalculations(); statusInfo.textContent="Recálculo iniciado."; } contextMenu.classList.remove('show'); });
+             function copySelectedNode() { if(selectedNodeId!==null){ const n=editor.getNodeFromId(selectedNodeId); if(n){ clipboardNodeData={ name:n.name, data:JSON.parse(JSON.stringify(n.data||{})) }; pasteBtn.disabled=false; showToast(`Nodo '${n.name}' copiado`,'info'); }} else { showToast('Nada seleccionado para copiar','warning');} }
+             function pasteNode() { if(clipboardNodeData){ const cX=lastMousePosition.x; const cY=lastMousePosition.y; const rect=container.getBoundingClientRect(); const dX=cX-rect.left; const dY=cY-rect.top; const cXv=(dX-editor.canvas_x)/editor.zoom; const cYv=(dY-editor.canvas_y)/editor.zoom; const pX=cXv+15; const pY=cYv+15; const newData=JSON.parse(JSON.stringify(clipboardNodeData.data)); const newId=addNodeToCanvas(clipboardNodeData.name, pX, pY, newData); if(newId){ showToast(`Nodo '${clipboardNodeData.name}' pegado`,'info'); editor.selectNode(newId); selectedNodeId=newId; updateToolbarButtonStates(); } } else { showToast('Portapapeles vacío','warning');} }
+             function deleteSelectedNode() { if(selectedNodeId!==null){ const node=editor.getNodeFromId(selectedNodeId); const name=node?node.name:'seleccionado'; editor.removeNodeId(String(selectedNodeId)); showToast(`Nodo '${name}' eliminado`,'info'); selectedNodeId=null; /* Event handles updates */ } else { showToast('Nada seleccionado para eliminar','warning');} }
+             document.addEventListener('keydown', e=>{ if(e.target.matches('input,textarea,select')) return; const isCtrl=e.ctrlKey||e.metaKey; if(isCtrl){ switch(e.key.toLowerCase()){ case 'z': e.preventDefault(); (e.shiftKey?editor.redo():editor.undo()); break; case 'y': e.preventDefault(); editor.redo(); break; case 'c': e.preventDefault(); if(selectedNodeId !== null) copySelectedNode(); break; case 'v': e.preventDefault(); pasteNode(); break; case 's': e.preventDefault(); saveFlowBtn.click(); break; case 'o': e.preventDefault(); importFlowInput.click(); break; case 'n': e.preventDefault(); newFlowBtn.click(); break; } } else if(e.key==='Delete'||e.key==='Backspace'){ e.preventDefault(); if(selectedNodeId !== null) deleteSelectedNode(); } else if(e.key==='Escape'){ if(helpPanel.classList.contains('show')) helpPanel.classList.remove('show'); else if(contextMenu.classList.contains('show')) contextMenu.classList.remove('show'); else if(document.querySelector('.modal-overlay.active')) closeModal(document.querySelector('.modal-overlay.active').id); else if(selectedNodeId!==null){ editor.deselectNode(); selectedNodeId=null; updateToolbarButtonStates(); } } });
+
+            // --- Init ---
+            updateToolbarButtonStates();
+            updateUnsavedChanges(false);
+            console.log("Editor Drawflow inicializado.");
+            statusInfo.textContent="Listo";
+            runAllCalculations(); // Initial calculation
+            window.onbeforeunload = e=>{ if(hasUnsavedChanges){ const msg="Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?"; e.returnValue=msg; return msg; } };
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
