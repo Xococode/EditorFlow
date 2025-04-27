@@ -1,0 +1,176 @@
+{
+  "drawflow": {
+    "Home": {
+      "data": {
+        "1": {
+          "id": 1,
+          "name": "number",
+          "data": {
+            "value": 10
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "3",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 97,
+          "pos_y": 78
+        },
+        "2": {
+          "id": 2,
+          "name": "number",
+          "data": {
+            "value": 5
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "3",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 94,
+          "pos_y": 265
+        },
+        "3": {
+          "id": 3,
+          "name": "add",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-plus node-icon\"></i> Sumar (+)</div><div class=\"box\"><div class=\"node-description\" style=\"margin-bottom: 8px;\">Suma los valores numéricos de todas las entradas conectadas.</div><button class=\"add-input-btn\"><i class=\"fas fa-plus\"></i> Añadir Entrada</button></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "4",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 408,
+          "pos_y": 166
+        },
+        "4": {
+          "id": 4,
+          "name": "multiply",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-times node-icon\"></i> Multiplicar (*)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "3",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "5",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "6",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 739,
+          "pos_y": 265
+        },
+        "5": {
+          "id": 5,
+          "name": "number",
+          "data": {
+            "value": 3
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "4",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 417,
+          "pos_y": 418
+        },
+        "6": {
+          "id": 6,
+          "name": "display",
+          "data": {
+            "result": "45"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "4",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1053,
+          "pos_y": 268
+        }
+      }
+    }
+  }
+}

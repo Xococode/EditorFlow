@@ -1,0 +1,360 @@
+{
+  "drawflow": {
+    "Home": {
+      "data": {
+        "1": {
+          "id": 1,
+          "name": "text",
+          "data": {
+            "value": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Mi Página Ensamblada</title>\n"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> Texto</div><div class=\"box\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "10",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 50,
+          "pos_y": 50
+        },
+        "2": {
+          "id": 2,
+          "name": "text",
+          "data": {
+            "value": "<style>\n    body { font-family: sans-serif; background-color: #eee; margin: 20px; }\n    h1 { color: navy; }\n    footer { margin-top: 30px; font-size: 0.8em; text-align: center; border-top: 1px solid #ccc; padding-top: 10px; }\n  </style>\n</head>\n"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> Texto</div><div class=\"box\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "10",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 47,
+          "pos_y": 244
+        },
+        "3": {
+          "id": 3,
+          "name": "text",
+          "data": {
+            "value": "<body>\n  <h1>Título Principal</h1>\n  <p>Este es un párrafo de contenido generado con Drawflow.</p>\n"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> Texto</div><div class=\"box\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "11",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 48,
+          "pos_y": 487
+        },
+        "4": {
+          "id": 4,
+          "name": "text",
+          "data": {
+            "value": "  <footer>\n    <p>Pie de página - © 2023</p>\n  </footer>\n"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> Texto</div><div class=\"box\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "12",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 49,
+          "pos_y": 681
+        },
+        "5": {
+          "id": 5,
+          "name": "text",
+          "data": {
+            "value": "  <script>\n    console.log('Script ejecutado!');\n    // alert('Hola!'); // Puedes añadir JS aquí\n  </script>\n"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> Texto</div><div class=\"box\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "13",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 50,
+          "pos_y": 877
+        },
+        "10": {
+          "id": 10,
+          "name": "concatenate",
+          "data": {},
+          "class": "string-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-link node-icon\"></i> Concatenar</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "11",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 378,
+          "pos_y": 168
+        },
+        "11": {
+          "id": 11,
+          "name": "concatenate",
+          "data": {},
+          "class": "string-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-link node-icon\"></i> Concatenar</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "10",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "3",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "12",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 692,
+          "pos_y": 364
+        },
+        "12": {
+          "id": 12,
+          "name": "concatenate",
+          "data": {},
+          "class": "string-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-link node-icon\"></i> Concatenar</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "11",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "4",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "13",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1004,
+          "pos_y": 558
+        },
+        "13": {
+          "id": 13,
+          "name": "concatenate",
+          "data": {},
+          "class": "string-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-link node-icon\"></i> Concatenar</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "12",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "5",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "14",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1312,
+          "pos_y": 746
+        },
+        "14": {
+          "id": 14,
+          "name": "concatenate",
+          "data": {},
+          "class": "string-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-link node-icon\"></i> Concatenar</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "13",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "15",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "16",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1614,
+          "pos_y": 925
+        },
+        "15": {
+          "id": 15,
+          "name": "text",
+          "data": {
+            "value": "</body>\n</html>"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> Texto</div><div class=\"box\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "14",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 52,
+          "pos_y": 1101
+        },
+        "16": {
+          "id": 16,
+          "name": "saveFile",
+          "data": {
+            "filename": "pagina_ensamblada.txt",
+            "currentvalue": "<!DOCTYPE html>..."
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-save node-icon\"></i> Guardar Archivo TXT</div><div class=\"box\"><label for=\"df-filename\">Nombre Archivo:</label><input type=\"text\" df-filename value=\"output.txt\" placeholder=\"output.txt\"><label for=\"df-currentvalue\">Valor Actual:</label><input type=\"text\" df-currentvalue readonly value=\"---\" style=\"font-style: italic;\"><button class=\"save-button\" title=\"Guardar el valor actual como texto plano\"><i class=\"fas fa-download\"></i> Guardar TXT</button></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "14",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1930,
+          "pos_y": 926
+        }
+      }
+    }
+  }
+}
