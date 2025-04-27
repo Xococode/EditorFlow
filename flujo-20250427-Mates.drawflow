@@ -1,0 +1,1119 @@
+{
+  "drawflow": {
+    "Home": {
+      "data": {
+        "1": {
+          "id": 1,
+          "name": "number",
+          "data": {
+            "value": 10
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "output": "input_1"
+                },
+                {
+                  "node": "102",
+                  "output": "input_2"
+                },
+                {
+                  "node": "104",
+                  "output": "input_1"
+                },
+                {
+                  "node": "108",
+                  "output": "input_1"
+                },
+                {
+                  "node": "109",
+                  "output": "input_1"
+                },
+                {
+                  "node": "114",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -539.6666666666666,
+          "pos_y": 37
+        },
+        "2": {
+          "id": 2,
+          "name": "number",
+          "data": {
+            "value": 3
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "output": "input_2"
+                },
+                {
+                  "node": "103",
+                  "output": "input_2"
+                },
+                {
+                  "node": "104",
+                  "output": "input_2"
+                },
+                {
+                  "node": "108",
+                  "output": "input_2"
+                },
+                {
+                  "node": "109",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": -585,
+          "pos_y": 342.3333333333333
+        },
+        "3": {
+          "id": 3,
+          "name": "number",
+          "data": {
+            "value": -4
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "output": "input_2"
+                },
+                {
+                  "node": "107",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -563,
+          "pos_y": 724.3333333333334
+        },
+        "4": {
+          "id": 4,
+          "name": "number",
+          "data": {
+            "value": 0.7854
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "106",
+                  "output": "input_1"
+                },
+                {
+                  "node": "111",
+                  "output": "input_1"
+                },
+                {
+                  "node": "112",
+                  "output": "input_1"
+                },
+                {
+                  "node": "113",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -410,
+          "pos_y": 1161.2857142857142
+        },
+        "100": {
+          "id": 100,
+          "name": "add",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-plus node-icon\"></i> Sumar (+)</div><div class=\"box\"><div class=\"node-description\" style=\"margin-bottom: 8px;\">Suma los valores numéricos de todas las entradas conectadas.</div><button class=\"add-input-btn\"><i class=\"fas fa-plus\"></i> Añadir Entrada</button></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "output": "input_1"
+                },
+                {
+                  "node": "105",
+                  "output": "input_1"
+                },
+                {
+                  "node": "200",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 64,
+          "pos_y": -282
+        },
+        "101": {
+          "id": 101,
+          "name": "multiply",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-times node-icon\"></i> Multiplicar (*)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "3",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "102",
+                  "output": "input_1"
+                },
+                {
+                  "node": "201",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 588,
+          "pos_y": 5.333333333333335
+        },
+        "102": {
+          "id": 102,
+          "name": "subtract",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-minus node-icon\"></i> Restar (-)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "103",
+                  "output": "input_1"
+                },
+                {
+                  "node": "202",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1114,
+          "pos_y": 41
+        },
+        "103": {
+          "id": 103,
+          "name": "divide",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-divide node-icon\"></i> Dividir (/)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "102",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "203",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1471.6666666666667,
+          "pos_y": 253
+        },
+        "104": {
+          "id": 104,
+          "name": "power",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-superscript node-icon\"></i> Potencia (^)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "204",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 88.33333333333333,
+          "pos_y": 166
+        },
+        "105": {
+          "id": 105,
+          "name": "sqrt",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-square-root-alt node-icon\"></i> Raíz Cuadrada</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "205",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 559,
+          "pos_y": -415.6666666666667
+        },
+        "106": {
+          "id": 106,
+          "name": "round",
+          "data": {
+            "decimals": 2
+          },
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-circle-notch node-icon\"></i> Redondear</div><div class=\"box\"><label for=\"df-decimals\">Decimales:</label><input type=\"number\" df-decimals value=\"0\" min=\"0\" max=\"10\"></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "4",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "206",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 128,
+          "pos_y": 1035.6363636363637
+        },
+        "107": {
+          "id": 107,
+          "name": "abs",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-ruler-vertical node-icon\"></i> Valor Absoluto</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "3",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "207",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -101.63636363636364,
+          "pos_y": 836
+        },
+        "108": {
+          "id": 108,
+          "name": "min",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-arrow-down node-icon\"></i> Mínimo (Min)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "208",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 310.3333333333333,
+          "pos_y": 417.6666666666667
+        },
+        "109": {
+          "id": 109,
+          "name": "max",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-arrow-up node-icon\"></i> Máximo (Max)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "209",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 550,
+          "pos_y": 760
+        },
+        "110": {
+          "id": 110,
+          "name": "random",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-random node-icon\"></i> Nº Aleatorio</div><div class=\"node-description\">Genera nº entre 0 y 1.</div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "210",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1516,
+          "pos_y": 719
+        },
+        "111": {
+          "id": 111,
+          "name": "sin",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-wave-square node-icon\"></i> Seno (Sin)</div><div class=\"node-description\">Entrada en radianes.</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "4",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "211",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -111.71428571428571,
+          "pos_y": 1513.7142857142858
+        },
+        "112": {
+          "id": 112,
+          "name": "cos",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-wave-square node-icon\"></i> Coseno (Cos)</div><div class=\"node-description\">Entrada en radianes.</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "4",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "212",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 378.7142857142857,
+          "pos_y": 1326.4285714285713
+        },
+        "113": {
+          "id": 113,
+          "name": "tan",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-wave-square node-icon\"></i> Tangente (Tan)</div><div class=\"node-description\">Entrada en radianes.</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "4",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "213",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 675.2857142857143,
+          "pos_y": 1187.142857142857
+        },
+        "114": {
+          "id": 114,
+          "name": "log",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-calculator node-icon\"></i> Logaritmo Natural (Ln)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "214",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 549.8571428571429,
+          "pos_y": 605.2857142857143
+        },
+        "200": {
+          "id": 200,
+          "name": "display",
+          "data": {
+            "result": "13"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 587.3333333333334,
+          "pos_y": -275.6666666666667
+        },
+        "201": {
+          "id": 201,
+          "name": "display",
+          "data": {
+            "result": "-52"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1105.3333333333333,
+          "pos_y": 242
+        },
+        "202": {
+          "id": 202,
+          "name": "display",
+          "data": {
+            "result": "-62"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "102",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1544.2222222222222,
+          "pos_y": -123.88888888888889
+        },
+        "203": {
+          "id": 203,
+          "name": "display",
+          "data": {
+            "result": "-20.666666666666668"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "103",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1864.2857142857142,
+          "pos_y": 18.285714285714285
+        },
+        "204": {
+          "id": 204,
+          "name": "display",
+          "data": {
+            "result": "1000"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "104",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 546.3333333333334,
+          "pos_y": 157.66666666666666
+        },
+        "205": {
+          "id": 205,
+          "name": "display",
+          "data": {
+            "result": "3.605551275463989"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "105",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1019.3333333333334,
+          "pos_y": -457
+        },
+        "206": {
+          "id": 206,
+          "name": "display",
+          "data": {
+            "result": "0.79"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "106",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 428,
+          "pos_y": 1130.2727272727273
+        },
+        "207": {
+          "id": 207,
+          "name": "display",
+          "data": {
+            "result": "4"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "107",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 521.6666666666666,
+          "pos_y": 886.3333333333334
+        },
+        "208": {
+          "id": 208,
+          "name": "display",
+          "data": {
+            "result": "3"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "108",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 709,
+          "pos_y": 371
+        },
+        "209": {
+          "id": 209,
+          "name": "display",
+          "data": {
+            "result": "10"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "109",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1193.142857142857,
+          "pos_y": 713.5714285714286
+        },
+        "210": {
+          "id": 210,
+          "name": "display",
+          "data": {
+            "result": "0.8799292529375288"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "110",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1906.3333333333333,
+          "pos_y": 664
+        },
+        "211": {
+          "id": 211,
+          "name": "display",
+          "data": {
+            "result": "0.7071080798594735"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "111",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 289.42857142857144,
+          "pos_y": 1531.142857142857
+        },
+        "212": {
+          "id": 212,
+          "name": "display",
+          "data": {
+            "result": "0.7071054825112363"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "112",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 722.8571428571429,
+          "pos_y": 1399.4285714285713
+        },
+        "213": {
+          "id": 213,
+          "name": "display",
+          "data": {
+            "result": "1.0000036732118496"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "113",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1125.2857142857142,
+          "pos_y": 1148
+        },
+        "214": {
+          "id": 214,
+          "name": "display",
+          "data": {
+            "result": "2.302585092994046"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "114",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1144.7142857142858,
+          "pos_y": 493.2857142857143
+        },
+        "215": {
+          "id": 215,
+          "name": "number",
+          "data": {
+            "value": "1"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "217",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -390.6666666666667,
+          "pos_y": -766
+        },
+        "216": {
+          "id": 216,
+          "name": "number",
+          "data": {
+            "value": "1"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "217",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": -377.3333333333333,
+          "pos_y": -549.3333333333334
+        },
+        "217": {
+          "id": 217,
+          "name": "add",
+          "data": {},
+          "class": "math-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-plus node-icon\"></i> Sumar (+)</div><div class=\"box\"><div class=\"node-description\" style=\"margin-bottom: 8px;\">Suma los valores numéricos de todas las entradas conectadas.</div><button class=\"add-input-btn\"><i class=\"fas fa-plus\"></i> Añadir Entrada</button></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "215",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "216",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "219",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -60.333333333333336,
+          "pos_y": -705
+        },
+        "219": {
+          "id": 219,
+          "name": "display",
+          "data": {
+            "result": "2"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "217",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 296,
+          "pos_y": -710.3333333333334
+        }
+      }
+    }
+  }
+}

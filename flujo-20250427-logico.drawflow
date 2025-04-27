@@ -1,0 +1,712 @@
+{
+  "drawflow": {
+    "Home": {
+      "data": {
+        "1": {
+          "id": 1,
+          "name": "number",
+          "data": {
+            "value": 10
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -984,
+          "pos_y": -106
+        },
+        "2": {
+          "id": 2,
+          "name": "number",
+          "data": {
+            "value": 5
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": -974,
+          "pos_y": 118
+        },
+        "3": {
+          "id": 3,
+          "name": "boolean",
+          "data": {
+            "value": "true"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-toggle-on node-icon\"></i> Booleano</div><div class=\"box\"><label for=\"df-value\">Valor:</label><select df-value><option value=\"true\">Verdadero (true)</option><option value=\"false\">Falso (false)</option></select></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "output": "input_2"
+                },
+                {
+                  "node": "102",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": -1008,
+          "pos_y": 618
+        },
+        "20": {
+          "id": 20,
+          "name": "text",
+          "data": {
+            "value": "IF: Condición AND es Verdadera",
+            "customTitle": ""
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> <span class=\"node-title-text\">Texto</span></div><div class=\"box\"><label for=\"df-customTitle\">Título del Nodo:</label><input type=\"text\" df-customTitle placeholder=\"Título personalizado...\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\" style=\"min-height: 80px;\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "104",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 704,
+          "pos_y": -38
+        },
+        "21": {
+          "id": 21,
+          "name": "text",
+          "data": {
+            "value": "IF: Condición AND es Falsa",
+            "customTitle": ""
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> <span class=\"node-title-text\">Texto</span></div><div class=\"box\"><label for=\"df-customTitle\">Título del Nodo:</label><input type=\"text\" df-customTitle placeholder=\"Título personalizado...\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\" style=\"min-height: 80px;\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "104",
+                  "output": "input_3"
+                }
+              ]
+            }
+          },
+          "pos_x": 922,
+          "pos_y": 164
+        },
+        "22": {
+          "id": 22,
+          "name": "text",
+          "data": {
+            "value": "TERN: Condición OR es Verdadera",
+            "customTitle": ""
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> <span class=\"node-title-text\">Texto</span></div><div class=\"box\"><label for=\"df-customTitle\">Título del Nodo:</label><input type=\"text\" df-customTitle placeholder=\"Título personalizado...\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\" style=\"min-height: 80px;\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "105",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": 596,
+          "pos_y": 576
+        },
+        "23": {
+          "id": 23,
+          "name": "text",
+          "data": {
+            "value": "TERN: Condición OR es Falsa",
+            "customTitle": ""
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-font node-icon\"></i> <span class=\"node-title-text\">Texto</span></div><div class=\"box\"><label for=\"df-customTitle\">Título del Nodo:</label><input type=\"text\" df-customTitle placeholder=\"Título personalizado...\"><label for=\"df-value\">Contenido:</label><textarea df-value placeholder=\"Introduce texto...\" style=\"min-height: 80px;\"></textarea></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "105",
+                  "output": "input_3"
+                }
+              ]
+            }
+          },
+          "pos_x": 840,
+          "pos_y": 794
+        },
+        "100": {
+          "id": 100,
+          "name": "compare",
+          "data": {
+            "operator": "gt"
+          },
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-equals node-icon\"></i> Comparar</div><div class=\"box\"><label for=\"df-operator\">Operador:</label><select df-operator><option value=\"eq\">== (Igual valor)</option><option value=\"seq\">=== (Igual valor y tipo)</option><option value=\"neq\">!= (Distinto valor)</option><option value=\"sneq\">!== (Distinto valor o tipo)</option><option value=\"gt\">> (Mayor que)</option><option value=\"lt\">< (Menor que)</option><option value=\"gte\">>= (Mayor o igual)</option><option value=\"lte\"><= (Menor o igual)</option></select></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "1",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "2",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "output": "input_1"
+                },
+                {
+                  "node": "102",
+                  "output": "input_1"
+                },
+                {
+                  "node": "103",
+                  "output": "input_1"
+                },
+                {
+                  "node": "200",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -634,
+          "pos_y": -16
+        },
+        "101": {
+          "id": 101,
+          "name": "and",
+          "data": {},
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-check-double node-icon\"></i> Y Lógico (AND)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "3",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "104",
+                  "output": "input_1"
+                },
+                {
+                  "node": "201",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -100,
+          "pos_y": 310
+        },
+        "102": {
+          "id": 102,
+          "name": "or",
+          "data": {},
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-bars node-icon\"></i> O Lógico (OR)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "3",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "105",
+                  "output": "input_1"
+                },
+                {
+                  "node": "202",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -114,
+          "pos_y": 518
+        },
+        "103": {
+          "id": 103,
+          "name": "not",
+          "data": {},
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-exclamation node-icon\"></i> NO Lógico (NOT)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "203",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -98,
+          "pos_y": -234
+        },
+        "104": {
+          "id": 104,
+          "name": "if",
+          "data": {},
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-question-circle node-icon\"></i> Si (If)</div><div class=\"node-description\">1=Condición, 2=Si Verdadero, 3=Si Falso</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "20",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_3": {
+              "connections": [
+                {
+                  "node": "21",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "204",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1210,
+          "pos_y": 38
+        },
+        "105": {
+          "id": 105,
+          "name": "ternary",
+          "data": {},
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-code-branch node-icon\"></i> Operador Ternario</div><div class=\"node-description\">Similar a 'If', más compacto. 1=Cond, 2=True, 3=False</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "102",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "22",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_3": {
+              "connections": [
+                {
+                  "node": "23",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "205",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 1086,
+          "pos_y": 526
+        },
+        "200": {
+          "id": 200,
+          "name": "display",
+          "data": {
+            "result": "true"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "100",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": -112,
+          "pos_y": 6
+        },
+        "201": {
+          "id": 201,
+          "name": "display",
+          "data": {
+            "result": "true"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "101",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 346,
+          "pos_y": -162
+        },
+        "202": {
+          "id": 202,
+          "name": "display",
+          "data": {
+            "result": "true"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "102",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 202,
+          "pos_y": 722
+        },
+        "203": {
+          "id": 203,
+          "name": "display",
+          "data": {
+            "result": "false"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "103",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 512,
+          "pos_y": -404
+        },
+        "204": {
+          "id": 204,
+          "name": "display",
+          "data": {
+            "result": "IF: Condición AND es Verdadera"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "104",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1502,
+          "pos_y": 28
+        },
+        "205": {
+          "id": 205,
+          "name": "display",
+          "data": {
+            "result": "TERN: Condición OR es Verdadera"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "105",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 1430,
+          "pos_y": 466
+        },
+        "206": {
+          "id": 206,
+          "name": "number",
+          "data": {
+            "value": "2"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "208",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -1018,
+          "pos_y": -676.5
+        },
+        "207": {
+          "id": 207,
+          "name": "number",
+          "data": {
+            "value": "1"
+          },
+          "class": "input-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-hashtag node-icon\"></i> Número</div><div class=\"box\"><label for=\"df-value\">Valor:</label><input type=\"number\" df-value value=\"0\" step=\"any\"></div></div>",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "208",
+                  "output": "input_2"
+                }
+              ]
+            }
+          },
+          "pos_x": -1008,
+          "pos_y": -462
+        },
+        "208": {
+          "id": 208,
+          "name": "compare",
+          "data": {
+            "operator": "gt"
+          },
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-equals node-icon\"></i> Comparar</div><div class=\"box\"><label for=\"df-operator\">Operador:</label><select df-operator><option value=\"eq\">== (Igual valor)</option><option value=\"seq\">=== (Igual valor y tipo)</option><option value=\"neq\">!= (Distinto valor)</option><option value=\"sneq\">!== (Distinto valor o tipo)</option><option value=\"gt\">> (Mayor que)</option><option value=\"lt\">< (Menor que)</option><option value=\"gte\">>= (Mayor o igual)</option><option value=\"lte\"><= (Menor o igual)</option></select></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "206",
+                  "input": "output_1"
+                }
+              ]
+            },
+            "input_2": {
+              "connections": [
+                {
+                  "node": "207",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "209",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -648,
+          "pos_y": -575
+        },
+        "209": {
+          "id": 209,
+          "name": "not",
+          "data": {},
+          "class": "logic-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-exclamation node-icon\"></i> NO Lógico (NOT)</div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "208",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "210",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": -284.75,
+          "pos_y": -639.5
+        },
+        "210": {
+          "id": 210,
+          "name": "display",
+          "data": {
+            "result": "false"
+          },
+          "class": "output-node",
+          "html": "<div><div class=\"title-box\"><i class=\"fas fa-tv node-icon\"></i> Mostrar Valor</div><div class=\"box\"><label for=\"df-result\">Resultado:</label><textarea df-result readonly>---</textarea></div></div>",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "209",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 85.75,
+          "pos_y": -688
+        }
+      }
+    }
+  }
+}
